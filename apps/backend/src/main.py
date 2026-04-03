@@ -4,11 +4,11 @@ from .api import router as api_router
 
 app = FastAPI(title="SIP SAGE AI Backend")
 
-# ✅ CORS - allow your Vercel frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://sip-sage-ai-simple.vercel.app",
+        "https://sip-sage-ai-simple-git-main-stockerful.vercel.app",
         "http://localhost:3000",
         "http://127.0.0.1:3000"
     ],

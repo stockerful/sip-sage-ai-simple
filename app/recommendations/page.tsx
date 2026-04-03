@@ -1,14 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-
-// FORCED FRESH BUILD - $(date) - Voice input removed to fix Vercel TypeScript error
+import { Wine, Sparkles, RefreshCw } from 'lucide-react';
 
 export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
-  const [history, setHistory] = useState<any[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,21 +19,10 @@ export default function Recommendations() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ preferences }),
       });
-
-      if (!res.ok) throw new Error('Backend error');
-
       const data = await res.json();
       setResult(data);
-
-      setHistory(prev => [{
-        preferences,
-        timestamp: new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
-        result: data
-      }, ...prev].slice(0, 6));
-
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Could not get recommendations. Is the backend running?');
+    } catch (err) {
+      console.error(err);
     }
     setLoading(false);
   };
@@ -46,124 +33,105 @@ export default function Recommendations() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F4EB] text-gray-900 font-sans">
-      <div className="max-w-3xl mx-auto px-6 py-12">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-3 mb-4">
-            <div className="w-3 h-3 bg-gradient-to-r from-[#4A0F1F] to-[#A65E3C] rounded-full"></div>
-            <span className="text-sm tracking-[4px] text-[#4A0F1F] font-medium">WILLAMETTE VALLEY • OREGON</span>
+    <div className="min-h-screen bg-[#F8F4EB] font-sans">
+      {/* Header */}
+      <div className="bg-white border-b border-[#D4C9B8] shadow-sm">
+        <div className="max-w-3xl mx-auto px-6 py-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-[#4A0F1F] rounded-2xl flex items-center justify-center text-white text-2xl">🍷</div>
+            <div>
+              <h1 className="text-3xl font-serif tracking-tight text-[#2C2C2C]">SIP SAGE AI</h1>
+              <p className="text-[#6F7F5F] text-sm tracking-widest">Willamette Valley • Oregon</p>
+            </div>
           </div>
-          <h1 className="text-7xl font-serif text-[#2C2C2C] tracking-tighter leading-none mb-4">
-            SIP SAGE AI
-          </h1>
-          <p className="text-2xl text-[#6F7F5F] font-light tracking-wide">
-            Wine is better when it's personal
-          </p>
+          <button
+            onClick={clearAll}
+            className="flex items-center gap-2 px-5 py-3 text-[#4A0F1F] hover:bg-[#F8F4EB] rounded-3xl transition-colors font-medium"
+          >
+            <RefreshCw size={20} />
+            New Recommendation
+          </button>
         </div>
+      </div>
 
-        <div className="bg-white rounded-3xl shadow-xl p-12 mb-16 border border-[#D4C9B8]">
+      <div className="max-w-3xl mx-auto px-6 py-10">
+        {/* Prompt Area */}
+        <div className="bg-white rounded-3xl shadow-sm border border-[#D4C9B8] p-8 mb-12">
+          <h2 className="text-2xl font-medium text-[#2C2C2C] mb-6">What kind of wine are you craving today?</h2>
+          
           <form onSubmit={handleSubmit}>
-            <label className="text-base uppercase tracking-widest text-[#6F7F5F] font-medium block mb-4">
-              Guest's Taste Profile
-            </label>
-
             <textarea
               value={preferences}
               onChange={(e) => setPreferences(e.target.value)}
-              placeholder="Describe the guest's taste (e.g. bright fruit-forward Pinot Noir with good acidity)"
-              className="w-full h-52 p-8 text-2xl border border-[#D4C9B8] rounded-3xl focus:outline-none focus:border-[#4A0F1F] resize-y bg-white text-black placeholder:text-gray-400 leading-relaxed"
+              placeholder="Bright fruit-forward Pinot Noir... Earthy reds... Crisp Chardonnay..."
+              className="w-full h-32 px-6 py-5 text-xl border border-[#D4C9B8] rounded-3xl focus:outline-none focus:border-[#4A0F1F] resize-none"
               disabled={loading}
             />
-
-            <div className="flex gap-4 mt-10">
-              <button
-                type="submit"
-                disabled={loading || !preferences.trim()}
-                className="flex-1 bg-[#4A0F1F] hover:bg-[#5C1328] disabled:bg-gray-400 text-white py-7 rounded-3xl text-2xl font-semibold tracking-wide transition-all active:scale-[0.985]"
-              >
-                {loading ? 'Consulting the vines...' : 'Find Matches'}
-              </button>
-              <button
-                type="button"
-                onClick={clearAll}
-                className="px-12 py-7 border border-[#D4C9B8] rounded-3xl text-xl text-gray-600 hover:bg-[#F8F4EB] transition font-medium"
-              >
-                Clear
-              </button>
-            </div>
+            
+            <button
+              type="submit"
+              disabled={loading || !preferences.trim()}
+              className="mt-6 w-full bg-[#4A0F1F] hover:bg-[#3A0C18] disabled:bg-gray-300 text-white text-2xl font-medium py-6 rounded-3xl transition-all flex items-center justify-center gap-3"
+            >
+              {loading ? (
+                <>
+                  <Sparkles className="animate-spin" size={28} />
+                  Finding perfect matches...
+                </>
+              ) : (
+                <>
+                  <Wine size={28} />
+                  Get Recommendations
+                </>
+              )}
+            </button>
           </form>
         </div>
 
+        {/* Results */}
         {result && (
-          <div className="space-y-16">
-            <div className="bg-white border border-[#D4C9B8] rounded-3xl p-12 text-center">
-              <p className="text-3xl text-[#2C2C2C] leading-relaxed font-light italic">
-                {result.explanation}
+          <div className="space-y-12">
+            <div className="text-center">
+              <p className="text-[#6F7F5F] text-lg max-w-md mx-auto">
+                {result.explanation || "Here are your personalized recommendations from the Willamette Valley."}
               </p>
             </div>
 
-            {result.recommendations && result.recommendations.length > 0 && (
-              <div className="space-y-16">
-                {result.recommendations.map((wine: any, index: number) => (
-                  <div 
-                    key={index} 
-                    className="bg-white rounded-3xl overflow-hidden border border-[#D4C9B8] shadow-sm hover:shadow-2xl transition-all duration-700"
-                  >
-                    <div className="h-2.5 bg-gradient-to-r from-[#4A0F1F] via-[#A65E3C] to-[#C17A5A]"></div>
-                    
-                    <div className="p-16">
-                      <div className="mb-14">
-                        <h3 className="text-6xl font-serif text-[#2C2C2C] tracking-[-1.5px] font-semibold leading-none">
-                          {wine.wine_name} <span className="text-5xl font-semibold text-[#6F7F5F]">{wine.vintage}</span>
-                        </h3>
-                      </div>
-
-                      <p className="text-gray-800 text-[21px] leading-[1.75] mb-14">
-                        {wine.tasting_note}
-                      </p>
-
-                      <div className="bg-[#F8F4EB] border-l-4 border-[#4A0F1F] pl-12 py-9 rounded-r-3xl mb-14">
-                        <p className="uppercase text-sm tracking-[2.5px] text-[#4A0F1F] font-medium mb-5">The Match</p>
-                        <p className="text-gray-800 text-[21px] leading-relaxed">
-                          {wine.why_it_matches}
-                        </p>
-                      </div>
-
-                      <div className="space-y-12">
-                        <div className="flex items-center gap-8">
-                          <div className="w-40">
-                            <div className="text-sm uppercase tracking-[3px] text-[#2C2C2C] font-medium">BOTTLE</div>
-                          </div>
-                          <div className="text-6xl font-bold text-[#2C2C2C]">
-                            ${wine.price_bottle}
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-8">
-                          <div className="w-40">
-                            <div className="text-sm uppercase tracking-[3px] text-[#A65E3C] font-medium">BY THE GLASS</div>
-                          </div>
-                          <div className="text-6xl font-bold text-[#4A0F1F]">
-                            ${wine.price_glass}
-                          </div>
-                        </div>
-                      </div>
+            <div className="grid gap-12">
+              {result.recommendations?.map((wine: any, index: number) => (
+                <div
+                  key={index}
+                  className="wine-card bg-white rounded-3xl shadow-sm border border-[#D4C9B8] overflow-hidden p-8"
+                >
+                  <div className="flex justify-between items-start mb-6">
+                    <div>
+                      <h3 className="text-4xl font-serif font-semibold text-[#2C2C2C] leading-none">
+                        {wine.wine_name} <span className="text-3xl text-[#6F7F5F]">{wine.vintage}</span>
+                      </h3>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
 
-        {history.length > 0 && (
-          <div className="mt-24 pt-16 border-t border-gray-200">
-            <p className="uppercase text-sm tracking-[3px] text-[#6F7F5F] mb-8 font-medium">Recent Guest Conversations</p>
-            <div className="space-y-5">
-              {history.map((item, i) => (
-                <div key={i} className="bg-white px-8 py-6 rounded-3xl text-xl text-gray-700 flex justify-between items-center border border-[#D4C9B8]">
-                  <span className="line-clamp-1">{item.preferences}</span>
-                  <span className="text-base text-gray-400 font-mono">{item.timestamp}</span>
+                  <p className="text-[#4A0F1F] text-xl leading-relaxed mb-8">
+                    {wine.tasting_note}
+                  </p>
+
+                  <div className="border-t border-[#D4C9B8] pt-8">
+                    <div className="text-[#6F7F5F] uppercase text-sm tracking-widest mb-2">Why it matches</div>
+                    <p className="text-[#2C2C2C] text-lg leading-relaxed">
+                      {wine.why_it_matches}
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-8 mt-10">
+                    <div>
+                      <div className="text-xs uppercase tracking-widest text-[#A65E3C]">By the Glass</div>
+                      <div className="text-5xl font-bold text-[#4A0F1F]">${wine.price_glass}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs uppercase tracking-widest text-[#2C2C2C]">Bottle</div>
+                      <div className="text-5xl font-bold text-[#2C2C2C]">${wine.price_bottle}</div>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -173,4 +141,3 @@ export default function Recommendations() {
     </div>
   );
 }
-// Fresh commit to force Vercel build - Fri Apr  3 13:02:32 PDT 2026

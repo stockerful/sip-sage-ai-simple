@@ -2,19 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Oregon Terroir palette + clean base styles */
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 248 4% 96%;   /* Soft warm off-white */
   }
 }
 
 body {
   font-feature-settings: "rlig" 1, "calt" 1;
+  font-size: 18px; /* Base size for all ages */
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .wine-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .wine-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
   }
 }

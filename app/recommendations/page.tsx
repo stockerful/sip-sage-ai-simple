@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 
-export default function SIPSageAI() {
+// FORCED FRESH BUILD - $(date) - Voice input removed to fix Vercel TypeScript error
+
+export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
@@ -171,3 +173,4 @@ export default function SIPSageAI() {
     </div>
   );
 }
+// Fresh commit to force Vercel build - Fri Apr  3 13:02:32 PDT 2026

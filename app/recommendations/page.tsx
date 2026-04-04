@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Wine, Sparkles, RefreshCw, X, Eye } from 'lucide-react';
 
 export default function Recommendations() {
@@ -33,9 +34,8 @@ export default function Recommendations() {
     setResult(null);
   };
 
-  // Debug click handler
   const openModal = (wine: any) => {
-    console.log("✅ Card clicked! Opening modal for:", wine.wine_name);
+    console.log("✅ Opening modal for:", wine.wine_name);
     setSelectedWine(wine);
   };
 
@@ -92,10 +92,13 @@ export default function Recommendations() {
 
             <div className="space-y-16">
               {result.recommendations?.map((wine: any, index: number) => (
-                <div
+                <motion.div
                   key={index}
-                  className="bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8 cursor-pointer hover:shadow-xl transition-all"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
                   onClick={() => openModal(wine)}
+                  className="wine-card cursor-pointer bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8 hover:shadow-xl transition-all"
                 >
                   {index > 0 && (
                     <div className="h-px bg-gradient-to-r from-transparent via-[#C36A4F] to-transparent mb-10"></div>
@@ -127,7 +130,6 @@ export default function Recommendations() {
                     </div>
                   </div>
 
-                  {/* Very clear button */}
                   <div 
                     onClick={(e) => { e.stopPropagation(); openModal(wine); }}
                     className="mt-10 flex items-center justify-center gap-2 text-[#C36A4F] text-sm font-medium border border-[#C36A4F]/30 rounded-2xl py-3 hover:bg-[#C36A4F]/5 transition-colors"
@@ -135,7 +137,7 @@ export default function Recommendations() {
                     <Eye size={18} />
                     Tap to view bottle details
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
 

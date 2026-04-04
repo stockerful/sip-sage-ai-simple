@@ -34,7 +34,6 @@ export default function Recommendations() {
 
   return (
     <div className="min-h-screen bg-[#F9F5ED] font-sans pb-20">
-      {/* Header */}
       <div className="pt-10 pb-8 text-center border-b border-[#E5D9C8]">
         <h1 className="text-5xl font-serif tracking-[-1px] text-[#1F1F1F]">
           SIP SAGE AI
@@ -42,7 +41,6 @@ export default function Recommendations() {
       </div>
 
       <div className="max-w-3xl mx-auto px-6 pt-8">
-        {/* Prompt */}
         <div className="bg-white rounded-3xl shadow-sm border border-[#E5D9C8] p-8 mb-12">
           <h2 className="text-2xl font-medium text-[#1F1F1F] mb-6 text-center">
             What kind of wine are you craving today?
@@ -77,7 +75,6 @@ export default function Recommendations() {
           </form>
         </div>
 
-        {/* Results */}
         {result && (
           <div className="space-y-16">
             <div className="text-center px-4">

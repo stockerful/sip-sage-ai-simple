@@ -87,7 +87,7 @@ export default function Recommendations() {
         </div>
       </div>
 
-      {/* Your Favorites - at top */}
+      {/* Favorites at top */}
       {favorites.length > 0 && (
         <div className="max-w-2xl mx-auto px-6 mt-8">
           <button onClick={() => setFavoritesOpen(!favoritesOpen)} className="flex items-center gap-3 text-xl font-medium">
@@ -162,14 +162,14 @@ export default function Recommendations() {
                     <p className="mt-6 text-lg leading-relaxed opacity-90">{wine.tasting_note}</p>
                     <p className="mt-4 text-[#9C2C2C] font-medium">{wine.why_it_matches}</p>
 
-                    {/* Updated Pricing: label on left, price on right with moderate gap */}
+                    {/* Pricing - moved much closer with two-space gap */}
                     <div className="mt-12 space-y-8">
-                      <div className="flex justify-between items-baseline">
-                        <div className="text-xs uppercase tracking-widest opacity-60">BY THE GLASS</div>
+                      <div className="flex items-baseline gap-5">
+                        <div className="text-xs uppercase tracking-widest opacity-60 w-28">BY THE GLASS</div>
                         <div className="text-6xl font-bold">${wine.price_glass}</div>
                       </div>
-                      <div className="flex justify-between items-baseline">
-                        <div className="text-xs uppercase tracking-widest opacity-60">BOTTLE</div>
+                      <div className="flex items-baseline gap-5">
+                        <div className="text-xs uppercase tracking-widest opacity-60 w-28">BOTTLE</div>
                         <div className="text-6xl font-bold">${wine.price_bottle}</div>
                       </div>
                     </div>
@@ -179,10 +179,7 @@ export default function Recommendations() {
                       <span className="text-sm uppercase tracking-widest opacity-60">Guest Average</span>
                       <div className="flex gap-1">
                         {[1, 2, 3, 4, 5].map((s) => (
-                          <Star
-                            key={s}
-                            className={`w-6 h-6 ${avg.rating >= s ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#EDE8E0]'}`}
-                          />
+                          <Star key={s} className={`w-6 h-6 ${avg.rating >= s ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#EDE8E0]'}`} />
                         ))}
                       </div>
                       <span className="text-sm font-medium text-[#9C2C2C]">
@@ -195,14 +192,8 @@ export default function Recommendations() {
                       <span className="text-sm uppercase tracking-widest opacity-60">Your Rating</span>
                       <div className="flex gap-1">
                         {[1, 2, 3, 4, 5].map((star) => (
-                          <button
-                            key={star}
-                            onClick={() => rateWine(wine, star)}
-                            className="transition-all hover:scale-110"
-                          >
-                            <Star
-                              className={`w-8 h-8 ${userRating >= star ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#EDE8E0]'}`}
-                            />
+                          <button key={star} onClick={() => rateWine(wine, star)} className="transition-all hover:scale-110">
+                            <Star className={`w-8 h-8 ${userRating >= star ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#EDE8E0]'}`} />
                           </button>
                         ))}
                       </div>
@@ -217,10 +208,7 @@ export default function Recommendations() {
                         whileTap={{ scale: 0.9 }}
                         className="transition-all"
                       >
-                        <Heart
-                          className={`w-9 h-9 ${isFavorited ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#9C2C2C]'}`}
-                          strokeWidth={isFavorited ? 0 : 2}
-                        />
+                        <Heart className={`w-9 h-9 ${isFavorited ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#9C2C2C]'}`} strokeWidth={isFavorited ? 0 : 2} />
                       </motion.button>
                       <motion.button
                         onClick={() => shareIndividual(wine)}

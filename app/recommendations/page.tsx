@@ -33,15 +33,15 @@ export default function Recommendations() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F0] font-sans">
+    <div className="min-h-screen bg-[#FAF7F0] font-sans pb-12">
       {/* Centered Header */}
-      <div className="pt-8 pb-6 text-center">
+      <div className="pt-8 pb-6 text-center border-b border-[#E8E2D5]">
         <h1 className="text-5xl font-serif tracking-tighter text-[#2C2C2C]">
           SIP SAGE AI
         </h1>
       </div>
 
-      <div className="max-w-3xl mx-auto px-6">
+      <div className="max-w-3xl mx-auto px-6 pt-8">
         {/* Prompt Area */}
         <div className="bg-white rounded-3xl shadow-sm border border-[#D4C9B8] p-8 mb-12">
           <h2 className="text-2xl font-medium text-[#2C2C2C] mb-6 text-center">
@@ -60,7 +60,7 @@ export default function Recommendations() {
             <button
               type="submit"
               disabled={loading || !preferences.trim()}
-              className="mt-6 w-full bg-[#4A0F1F] hover:bg-[#3A0C18] disabled:bg-gray-300 text-white text-2xl font-medium py-6 rounded-3xl transition-all flex items-center justify-center gap-3"
+              className="mt-6 w-full bg-[#4A0F1F] hover:bg-[#3A0C18] active:scale-95 disabled:bg-gray-300 text-white text-2xl font-medium py-6 rounded-3xl transition-all flex items-center justify-center gap-3"
             >
               {loading ? (
                 <>
@@ -79,19 +79,24 @@ export default function Recommendations() {
 
         {/* Results */}
         {result && (
-          <div className="space-y-12">
+          <div className="space-y-14">
             <div className="text-center">
               <p className="text-[#6F7F5F] text-lg max-w-md mx-auto">
                 {result.explanation || "Here are your personalized recommendations from the Willamette Valley."}
               </p>
             </div>
 
-            <div className="grid gap-12">
+            <div className="space-y-14">
               {result.recommendations?.map((wine: any, index: number) => (
                 <div
                   key={index}
-                  className="wine-card bg-white rounded-3xl shadow-sm border border-[#D4C9B8] overflow-hidden p-8"
+                  className="wine-card bg-white rounded-3xl shadow-sm border border-[#D4C9B8] overflow-hidden p-8 active:scale-[1.02] transition-all"
                 >
+                  {/* Strong visible divider above each card (except first) */}
+                  {index > 0 && (
+                    <div className="h-px bg-[#8C6F5C] w-16 mx-auto mb-10"></div>
+                  )}
+
                   <div className="flex justify-between items-start mb-6">
                     <div>
                       <h3 className="text-4xl font-serif font-semibold text-[#2C2C2C] leading-none">

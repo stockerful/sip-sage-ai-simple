@@ -1,62 +1,65 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wine, Sparkles, RefreshCw, Heart, Share2, ChevronDown } from 'lucide-react';
+import { Wine, Sparkles, Heart, Share2, RefreshCw, ChevronDown } from 'lucide-react';
 
 export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [darkMode, setDarkMode] = useState(false);
   const [favorites, setFavorites] = useState<any[]>([]);
-  const [favoritesOpen, setFavoritesOpen] = useState(false);
-  const [toast, setToast] = useState('');
+  const [favoritesOpen, setFavoritesOpen] = useState(true);
 
+  // Load dark mode & favorites
   useEffect(() => {
-    const saved = localStorage.getItem('sipSageFavorites');
-    if (saved) setFavorites(JSON.parse(saved));
+    const savedDark = localStorage.getItem('darkMode') === 'true';
+    setDarkMode(savedDark);
+    if (savedDark) document.documentElement.classList.add('dark');
+
+    const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    setFavorites(savedFavorites);
   }, []);
 
-  const saveFavorites = (newFavorites: any[]) => {
-    setFavorites(newFavorites);
-    localStorage.setItem('sipSageFavorites', JSON.stringify(newFavorites));
+  const toggleDarkMode = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    localStorage.setItem('darkMode', newMode.toString());
+    if (newMode) document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
   };
 
   const toggleFavorite = (wine: any) => {
-    const isFavorited = favorites.some(f => f.wine_name === wine.wine_name);
-    if (isFavorited) {
-      saveFavorites(favorites.filter(f => f.wine_name !== wine.wine_name));
+    const exists = favorites.some((f) => f.wine_name === wine.wine_name);
+    let newFavorites;
+    if (exists) {
+      newFavorites = favorites.filter((f) => f.wine_name !== wine.wine_name);
     } else {
-      saveFavorites([...favorites, wine]);
+      newFavorites = [...favorites, wine];
     }
+    setFavorites(newFavorites);
+    localStorage.setItem('favorites', JSON.stringify(newFavorites));
   };
 
   const shareIndividual = async (wine: any) => {
-    const text = `🍷 SIP SAGE AI Favorite\n${wine.wine_name} ${wine.vintage}\n${wine.tasting_note}\n\nBottle $${wine.price_bottle} | Glass $${wine.price_glass}\n\n#SipSageAI #OregonWine`;
-
-    try {
-      if (navigator.share) {
-        await navigator.share({ title: 'My Wine Favorite', text });
-      } else {
-        await navigator.clipboard.writeText(text);
-        setToast('✅ Copied to clipboard!');
-        setTimeout(() => setToast(''), 2500);
-      }
-    } catch (err) {
-      console.error(err);
+    const text = `${wine.wine_name} ${wine.vintage} — ${wine.why_it_matches}`;
+    if (navigator.share) {
+      await navigator.share({ title: wine.wine_name, text });
+    } else {
+      await navigator.clipboard.writeText(text);
+      alert('Copied to clipboard!');
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!preferences.trim()) return;
-
     setLoading(true);
     try {
       const res = await fetch('https://sip-sage-ai-backend.onrender.com/api/recommend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ preferences }),
+        body: JSON.stringify({ preferences, tenant_id: 'mcminnville-test' }),
       });
       const data = await res.json();
       setResult(data);
@@ -66,83 +69,138 @@ export default function Recommendations() {
     setLoading(false);
   };
 
-  const clearAll = () => {
-    setPreferences('');
-    setResult(null);
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { type: 'spring', stiffness: 100, damping: 15, delay: i * 0.08 }
+    })
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F4EF] font-sans pb-20 dark:bg-[#1F2521]">
-      <div className="pt-10 pb-8 text-center border-b border-[#EDE8E0] dark:border-[#E07A5F]">
-        <h1 className="text-5xl font-serif tracking-[-1px] text-[#1F2521] dark:text-[#F8F4EF]">
-          SIP SAGE AI
-        </h1>
+    <div className={`min-h-screen pb-12 ${darkMode ? 'dark bg-[#1F2521] text-[#F8F4EF]' : 'bg-[#F8F4EF] text-[#1F2521]'}`}>
+      {/* Header + Toggle */}
+      <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#EDE8E0] dark:border-[#3F1C2B]">
+        <div className="flex items-center gap-3">
+          <Wine className="w-8 h-8 text-[#D97F3E]" />
+          <h1 className="text-4xl font-bold tracking-tighter">SIP SAGE AI</h1>
+        </div>
+        <button onClick={toggleDarkMode} className="p-3 rounded-2xl bg-white dark:bg-[#3F1C2B] border border-[#EDE8E0] dark:border-[#E89F6F]">
+          {darkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+        </button>
       </div>
 
-      <div className="max-w-3xl mx-auto px-6 pt-8">
-        {/* Prompt Area */}
-        <div className="bg-white dark:bg-[#1F2521] rounded-3xl shadow-sm border border-[#EDE8E0] dark:border-[#E07A5F] p-8 mb-12">
-          <h2 className="text-2xl font-medium text-[#1F2521] dark:text-[#F8F4EF] mb-6 text-center">
-            What kind of wine are you craving today?
-          </h2>
-          
-          <form onSubmit={handleSubmit}>
-            <textarea
-              value={preferences}
-              onChange={(e) => setPreferences(e.target.value)}
-              placeholder="Bright fruit-forward Pinot Noir... Earthy reds... Crisp Chardonnay..."
-              className="w-full h-40 px-6 py-6 text-xl border border-[#EDE8E0] dark:border-[#E07A5F] rounded-3xl focus:outline-none focus:border-[#3F1C2B] dark:focus:border-[#E07A5F] resize-none leading-relaxed text-[#1F2521] dark:text-[#F8F4EF]"
-              disabled={loading}
-            />
-            
-            <button
-              type="submit"
-              disabled={loading || !preferences.trim()}
-              className="mt-8 w-full bg-[#3F1C2B] dark:bg-[#E07A5F] hover:bg-[#2C1621] dark:hover:bg-[#C36A4F] active:scale-[0.97] disabled:bg-gray-300 text-white dark:text-[#1F2521] text-2xl font-medium py-7 rounded-3xl transition-all flex items-center justify-center gap-3 shadow-lg"
-            >
-              {loading ? (
-                <>
-                  <Sparkles className="animate-spin" size={28} />
-                  Thinking...
-                </>
-              ) : (
-                <>
-                  <Wine size={28} />
-                  Get My Recommendations
-                </>
-              )}
-            </button>
-          </form>
-        </div>
+      <div className="max-w-2xl mx-auto px-6">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="mt-8">
+          <textarea
+            value={preferences}
+            onChange={(e) => setPreferences(e.target.value)}
+            placeholder="Tell me what you're craving today..."
+            className="w-full h-32 p-6 rounded-3xl border border-[#EDE8E0] dark:border-[#3F1C2B] bg-white dark:bg-[#3F1C2B] text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#D97F3E]"
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-4 w-full py-7 rounded-3xl bg-[#D97F3E] hover:bg-[#C36A4F] text-white text-2xl font-medium flex items-center justify-center gap-3 transition-all"
+          >
+            {loading ? (
+              <>Thinking <Sparkles className="animate-spin" /></>
+            ) : (
+              <>Get Recommendations <Sparkles /></>
+            )}
+          </button>
+        </form>
+
+        {/* Results */}
+        {result && (
+          <div className="mt-12">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-3xl font-light">Your Recommendations</h2>
+              <button onClick={() => setResult(null)} className="text-[#D97F3E] flex items-center gap-2">
+                <RefreshCw size={20} /> New Search
+              </button>
+            </div>
+
+            <div className="grid gap-12">
+              {result.recommendations.map((wine: any, index: number) => (
+                <motion.div
+                  key={index}
+                  custom={index}
+                  initial="hidden"
+                  animate="visible"
+                  variants={cardVariants}
+                  whileHover={{ y: -8 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="wine-card bg-white dark:bg-[#3F1C2B] rounded-3xl shadow-md border border-[#EDE8E0] dark:border-[#E89F6F] overflow-hidden p-8"
+                >
+                  {/* Wine card content with vintage + pricing as requested */}
+                  <h3 className="text-4xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h3>
+                  <p className="mt-6 text-lg leading-relaxed opacity-90">{wine.tasting_note}</p>
+                  <p className="mt-4 text-[#D97F3E] font-medium">{wine.why_it_matches}</p>
+
+                  {/* Pricing - stacked and close together */}
+                  <div className="mt-12 grid grid-cols-2 gap-8">
+                    <div>
+                      <div className="text-xs uppercase tracking-widest opacity-60">BOTTLE</div>
+                      <div className="text-6xl font-bold text-[#1F2521] dark:text-[#F8F4EF]">${wine.price_bottle}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs uppercase tracking-widest opacity-60">BY THE GLASS</div>
+                      <div className="text-6xl font-bold text-[#1F2521] dark:text-[#F8F4EF]">${wine.price_glass}</div>
+                    </div>
+                  </div>
+
+                  {/* Heart + Share buttons - seamless X.com style */}
+                  <div className="flex justify-end gap-6 mt-8">
+                    <motion.button
+                      onClick={() => toggleFavorite(wine)}
+                      whileHover={{ scale: 1.15 }}
+                      whileTap={{ scale: 0.85 }}
+                      className="text-4xl"
+                    >
+                      ❤️
+                    </motion.button>
+                    <motion.button
+                      onClick={() => shareIndividual(wine)}
+                      whileHover={{ scale: 1.15 }}
+                      whileTap={{ scale: 0.85 }}
+                      className="text-[#1F2521] dark:text-[#F8F4EF]"
+                    >
+                      <Share2 size={32} />
+                    </motion.button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Favorites Section */}
         {favorites.length > 0 && (
-          <div className="mb-16">
-            <button onClick={() => setFavoritesOpen(!favoritesOpen)} className="w-full flex items-center justify-between bg-white dark:bg-[#1F2521] rounded-3xl shadow-sm border border-[#EDE8E0] dark:border-[#E07A5F] px-8 py-6 text-left hover:bg-[#F8F4EF] dark:hover:bg-[#2C2520]">
-              <div className="flex items-center gap-3">
-                <Heart className="text-red-500" size={24} fill="currentColor" />
-                <h3 className="text-2xl font-medium text-[#1F2521] dark:text-[#F8F4EF]">Your Favorites</h3>
-                <span className="text-sm text-[#8A9E8E] dark:text-[#E07A5F] bg-[#F8F4EF] dark:bg-[#2C2520] px-3 py-1 rounded-2xl">{favorites.length}</span>
-              </div>
-              <ChevronDown size={24} className={`transition-transform ${favoritesOpen ? 'rotate-180' : ''}`} />
+          <div className="mt-16">
+            <button onClick={() => setFavoritesOpen(!favoritesOpen)} className="flex items-center gap-3 text-xl font-medium">
+              ❤️ Your Favorites
+              <ChevronDown className={`transition-transform ${favoritesOpen ? 'rotate-180' : ''}`} />
             </button>
-
             <AnimatePresence>
               {favoritesOpen && (
-                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="space-y-6 mt-6 overflow-hidden">
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="mt-6 space-y-8"
+                >
                   {favorites.map((wine, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white dark:bg-[#1F2521] rounded-3xl shadow-sm border border-[#EDE8E0] dark:border-[#E07A5F] p-8">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <h4 className="text-3xl font-serif font-semibold text-[#1F2521] dark:text-[#F8F4EF]">
-                            {wine.wine_name} <span className="text-2xl text-[#8A9E8E] dark:text-[#E07A5F]">{wine.vintage}</span>
-                          </h4>
-                          <p className="text-[#1A3C35] dark:text-[#F8F4EF] mt-3 line-clamp-2">{wine.tasting_note}</p>
-                        </div>
-                        <div className="flex items-center gap-6">
-                          <button onClick={() => toggleFavorite(wine)} className="text-3xl transition-all hover:scale-110 active:scale-95 text-red-500">❤️</button>
-                          <button onClick={() => shareIndividual(wine)} className="text-[#1F2521] dark:text-[#F8F4EF] hover:text-[#3F1C2B] dark:hover:text-[#E07A5F] transition-all hover:scale-110 active:scale-95"><Share2 size={26} /></button>
-                        </div>
+                    <motion.div key={i} className="flex justify-between items-start bg-white dark:bg-[#3F1C2B] p-6 rounded-3xl">
+                      <div>
+                        <h4 className="text-2xl font-semibold">{wine.wine_name} {wine.vintage}</h4>
+                        <p className="text-sm opacity-70">{wine.why_it_matches}</p>
+                      </div>
+                      <div className="flex gap-4">
+                        <button onClick={() => toggleFavorite(wine)} className="text-3xl">🗑️</button>
+                        <button onClick={() => shareIndividual(wine)}><Share2 size={28} /></button>
                       </div>
                     </motion.div>
                   ))}
@@ -151,53 +209,7 @@ export default function Recommendations() {
             </AnimatePresence>
           </div>
         )}
-
-        {/* Current Results */}
-        {result && (
-          <div className="space-y-16">
-            <div className="text-center px-4">
-              <p className="text-[#8A9E8E] dark:text-[#E07A5F] text-lg leading-relaxed">
-                {result.explanation || "Here are your personalized recommendations from the Willamette Valley."}
-              </p>
-            </div>
-
-            <div className="space-y-16">
-              {result.recommendations?.map((wine: any, index: number) => (
-                <motion.div key={index} custom={index} initial="hidden" animate="visible" variants={{ hidden: { opacity: 0, y: 40 }, visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.08 } }) }} whileHover={{ y: -8 }} whileTap={{ scale: 0.98 }} className="wine-card bg-white dark:bg-[#1F2521] rounded-3xl shadow-md border border-[#EDE8E0] dark:border-[#E07A5F] overflow-hidden p-8">
-                  {index > 0 && <div className="h-px bg-gradient-to-r from-transparent via-[#E07A5F] to-transparent mb-10"></div>}
-                  <div className="flex justify-between items-start">
-                    <h3 className="text-4xl font-serif font-semibold text-[#1F2521] dark:text-[#F8F4EF] leading-none mb-8">
-                      {wine.wine_name} <span className="text-4xl">{wine.vintage}</span>
-                    </h3>
-                    <button onClick={(e) => { e.stopPropagation(); toggleFavorite(wine); }} className="text-3xl transition-all hover:scale-110 active:scale-95 text-red-500">{favorites.some(f => f.wine_name === wine.wine_name) ? '❤️' : '♡'}</button>
-                  </div>
-                  <p className="text-[#1A3C35] dark:text-[#F8F4EF] text-xl leading-relaxed mb-8">{wine.tasting_note}</p>
-                  <div className="border-t border-[#EDE8E0] dark:border-[#E07A5F] pt-8">
-                    <div className="text-[#8A9E8E] dark:text-[#E07A5F] uppercase text-sm tracking-widest mb-2">Why it matches</div>
-                    <p className="text-[#1F2521] dark:text-[#F8F4EF] text-lg leading-relaxed">{wine.why_it_matches}</p>
-                  </div>
-                  <div className="mt-12 space-y-8">
-                    <div className="flex items-baseline gap-4">
-                      <div className="text-xs uppercase tracking-widest text-[#1F2521] dark:text-[#F8F4EF]">BOTTLE</div>
-                      <div className="text-5xl font-bold text-[#1F2521] dark:text-[#F8F4EF]">${wine.price_bottle}</div>
-                    </div>
-                    <div className="flex items-baseline gap-4">
-                      <div className="text-xs uppercase tracking-widest text-[#E07A5F]">BY THE GLASS</div>
-                      <div className="text-5xl font-bold text-[#E07A5F]">${wine.price_glass}</div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            <button onClick={clearAll} className="w-full flex items-center justify-center gap-3 py-6 text-[#1A3C35] dark:text-[#E07A5F] font-medium text-xl border-2 border-[#EDE8E0] dark:border-[#E07A5F] rounded-3xl hover:bg-white dark:hover:bg-[#1F2521] active:scale-95 transition-all mx-auto max-w-xs">
-              <RefreshCw size={24} /> New Recommendation
-            </button>
-          </div>
-        )}
       </div>
-
-      {toast && <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#1F2521] text-white text-lg px-8 py-4 rounded-3xl shadow-2xl z-50">{toast}</div>}
     </div>
   );
 }

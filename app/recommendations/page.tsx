@@ -155,20 +155,24 @@ export default function Recommendations() {
 
                         <div className="flex items-center gap-6">
                           {/* Seamless X.com-style Heart */}
-                          <button
+                          <motion.button
                             onClick={() => toggleFavorite(wine)}
-                            className="text-3xl transition-all hover:scale-110 active:scale-95 text-red-500"
+                            whileHover={{ scale: 1.15 }}
+                            whileTap={{ scale: 0.85 }}
+                            className="text-3xl transition-all text-red-500"
                           >
                             ❤️
-                          </button>
+                          </motion.button>
 
                           {/* Seamless X.com-style Share */}
-                          <button
+                          <motion.button
                             onClick={() => shareIndividual(wine)}
-                            className="text-[#1F2521] hover:text-[#1A3C35] transition-all hover:scale-110 active:scale-95"
+                            whileHover={{ scale: 1.15 }}
+                            whileTap={{ scale: 0.85 }}
+                            className="text-[#1F2521] hover:text-[#1A3C35] transition-all"
                           >
                             <Share2 size={26} />
-                          </button>
+                          </motion.button>
                         </div>
                       </div>
                     </motion.div>
@@ -211,12 +215,14 @@ export default function Recommendations() {
                     <h3 className="text-4xl font-serif font-semibold text-[#1F2521] leading-none mb-8">
                       {wine.wine_name} <span className="text-4xl">{wine.vintage}</span>
                     </h3>
-                    <button
+                    <motion.button
                       onClick={(e) => { e.stopPropagation(); toggleFavorite(wine); }}
-                      className="text-3xl transition-all hover:scale-110 active:scale-95 text-red-500"
+                      whileHover={{ scale: 1.15 }}
+                      whileTap={{ scale: 0.85 }}
+                      className="text-3xl transition-all text-red-500"
                     >
                       {favorites.some(f => f.wine_name === wine.wine_name) ? '❤️' : '♡'}
-                    </button>
+                    </motion.button>
                   </div>
 
                   <p className="text-[#1A3C35] text-xl leading-relaxed mb-8">

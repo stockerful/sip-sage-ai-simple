@@ -92,11 +92,8 @@ export default function Recommendations() {
 
             <div className="space-y-16">
               {result.recommendations?.map((wine: any, index: number) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
                   onClick={() => openModal(wine)}
                   className="wine-card cursor-pointer bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8 hover:shadow-xl transition-all"
                 >
@@ -137,7 +134,7 @@ export default function Recommendations() {
                     <Eye size={18} />
                     Tap to view bottle details
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
 

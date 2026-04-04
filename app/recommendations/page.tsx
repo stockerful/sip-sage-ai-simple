@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Wine, Sparkles, RefreshCw } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Wine, Sparkles, RefreshCw, X } from 'lucide-react';
 
 export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [selectedWine, setSelectedWine] = useState<any>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,7 +104,8 @@ export default function Recommendations() {
                   variants={cardVariants}
                   whileHover={{ y: -6 }}
                   whileTap={{ scale: 0.98 }}
-                  className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8"
+                  onClick={() => setSelectedWine(wine)}
+                  className="wine-card cursor-pointer bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8"
                 >
                   {index > 0 && (
                     <div className="h-px bg-gradient-to-r from-transparent via-[#C36A4F] to-transparent mb-10"></div>
@@ -124,7 +126,6 @@ export default function Recommendations() {
                     </p>
                   </div>
 
-                  {/* Compact pricing - right next to labels */}
                   <div className="mt-12 space-y-8">
                     <div className="flex items-baseline gap-4">
                       <div className="text-xs uppercase tracking-widest text-[#1F2521]">BOTTLE</div>
@@ -149,6 +150,80 @@ export default function Recommendations() {
           </div>
         )}
       </div>
+
+      {/* Modal */}
+      <AnimatePresence>
+        {selectedWine && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
+            onClick={() => setSelectedWine(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopImmediatePropagation()}
+              className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
+            >
+              {/* Bottle Image */}
+              <div className="h-96 bg-[#F8F9F7] flex items-center justify-center relative">
+                <img
+                  src="https://picsum.photos/id/1015/800/800"
+                  alt={selectedWine.wine_name}
+                  className="h-full object-contain drop-shadow-2xl"
+                />
+                <button
+                  onClick={() => setSelectedWine(null)}
+                  className="absolute top-6 right-6 bg-white rounded-full p-3 shadow-lg"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              <div className="p-8">
+                <h2 className="text-4xl font-serif font-semibold text-[#1F2521]">
+                  {selectedWine.wine_name} <span className="text-3xl text-[#8A9E8E]">{selectedWine.vintage}</span>
+                </h2>
+
+                <p className="text-[#1A3C35] text-xl leading-relaxed my-6">
+                  {selectedWine.tasting_note}
+                </p>
+
+                <div className="border-t border-[#EDE8E0] pt-6">
+                  <div className="text-[#8A9E8E] uppercase text-sm tracking-widest mb-2">Why it matches</div>
+                  <p className="text-[#1F2521] text-lg leading-relaxed">
+                    {selectedWine.why_it_matches}
+                  </p>
+                </div>
+
+                {/* Cool details */}
+                <div className="mt-8 grid grid-cols-2 gap-6 text-sm">
+                  <div>
+                    <div className="font-medium text-[#1F2521]">Cool Fact</div>
+                    <p className="text-[#8A9E8E]">Grown in the historic Dundee Hills AVA with volcanic soils</p>
+                  </div>
+                  <div>
+                    <div className="font-medium text-[#1F2521]">Perfect Pairing</div>
+                    <p className="text-[#8A9E8E]">Salmon, mushroom risotto, or aged cheeses</p>
+                  </div>
+                </div>
+
+                <div className="mt-10 flex justify-between text-2xl font-bold">
+                  <div className="text-[#C36A4F]">
+                    Glass ${selectedWine.price_glass}
+                  </div>
+                  <div className="text-[#1F2521]">
+                    Bottle ${selectedWine.price_bottle}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

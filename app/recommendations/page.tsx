@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Heart, Share2, RefreshCw, ChevronDown, Star } from 'lucide-react';
+import { Wine, Sparkles, Heart, Share2, RefreshCw, ChevronDown, Star } from 'lucide-react';
 
 export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
@@ -79,12 +79,21 @@ export default function Recommendations() {
 
   return (
     <div className="min-h-screen pb-12 bg-[#F9F5F0] text-[#1F2521]">
-      {/* Centered Header - plain text title, no Wine icon */}
+      {/* Enhanced Header with decorative line */}
       <div className="flex items-center justify-center pt-6 pb-4 border-b border-[#EDE8E0]">
-        <h1 className="text-4xl font-bold tracking-tighter">SIP SAGE AI</h1>
+        <div className="text-center">
+          <h1 className="text-4xl font-bold tracking-tighter">SIP SAGE AI</h1>
+          
+          {/* Thin decorative line */}
+          <div className="h-px w-48 mx-auto bg-gradient-to-r from-transparent via-[#EDE8E0] to-transparent my-3"></div>
+          
+          <p className="text-sm uppercase tracking-[1.5px] text-[#9C2C2C] font-medium">
+            Instant Expertise. Effortless Hosting
+          </p>
+        </div>
       </div>
 
-      {/* Favorites at top */}
+      {/* Your Favorites - now matches page perfectly and floats */}
       {favorites.length > 0 && (
         <div className="max-w-2xl mx-auto px-6 mt-10">
           <div className="flex items-center gap-3 mb-6">
@@ -103,7 +112,10 @@ export default function Recommendations() {
             {favoritesOpen && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="space-y-8">
                 {favorites.map((wine, i) => (
-                  <motion.div key={i} className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8">
+                  <motion.div 
+                    key={i} 
+                    className="wine-card bg-white rounded-3xl shadow-xl border border-[#EDE8E0] overflow-hidden p-8"
+                  >
                     <h4 className="text-2xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h4>
                     <p className="mt-4 text-sm opacity-70">{wine.why_it_matches}</p>
                     <div className="flex justify-end gap-6 mt-8">

@@ -109,10 +109,10 @@ export default function Recommendations() {
                     <div className="h-px bg-gradient-to-r from-transparent via-[#C36A4F] to-transparent mb-10"></div>
                   )}
 
-                  <h3 className="text-4xl font-serif font-semibold text-[#1F2521] leading-none mb-1">
-                    {wine.wine_name}
+                  {/* Wine name + vintage in same style */}
+                  <h3 className="text-4xl font-serif font-semibold text-[#1F2521] leading-none mb-8">
+                    {wine.wine_name} <span className="text-4xl">{wine.vintage}</span>
                   </h3>
-                  <span className="text-3xl text-[#8A9E8E] block mb-8">{wine.vintage}</span>
 
                   <p className="text-[#1A3C35] text-xl leading-relaxed mb-8">
                     {wine.tasting_note}
@@ -125,14 +125,15 @@ export default function Recommendations() {
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-8 mt-12">
-                    <div>
-                      <div className="text-xs uppercase tracking-widest text-[#C36A4F]">By the Glass</div>
-                      <div className="text-5xl font-bold text-[#1A3C35]">${wine.price_glass}</div>
-                    </div>
-                    <div>
-                      <div className="text-xs uppercase tracking-widest text-[#1F2521]">Bottle</div>
+                  {/* New vertical pricing layout */}
+                  <div className="mt-12 space-y-8">
+                    <div className="flex justify-between items-end">
+                      <div className="text-xs uppercase tracking-widest text-[#1F2521]">BOTTLE</div>
                       <div className="text-5xl font-bold text-[#1F2521]">${wine.price_bottle}</div>
+                    </div>
+                    <div className="flex justify-between items-end">
+                      <div className="text-xs uppercase tracking-widest text-[#C36A4F]">BY THE GLASS</div>
+                      <div className="text-5xl font-bold text-[#C36A4F]">${wine.price_glass}</div>
                     </div>
                   </div>
                 </motion.div>

@@ -58,24 +58,22 @@ export default function Recommendations() {
     if (favorites.length === 0) return;
 
     const lines = favorites.map(w => 
-      `• ${w.wine_name} ${w.vintage} — Bottle $${w.price_bottle} | Glass $${w.price_glass}`
+      `🍷 ${w.wine_name} ${w.vintage} — Bottle $${w.price_bottle}`
     );
 
-    const text = `My SIP SAGE AI Favorites from the tasting room:\n\n${lines.join('\n')}\n\nRecommended by SIP SAGE AI 🍷`;
+    const shareText = `My SIP SAGE AI Favorites from the tasting room:\n\n${lines.join('\n')}\n\n#SipSageAI #WillametteValley #OregonWine`;
 
     try {
-      // Try native share first (best on iPhone)
       if (navigator.share) {
         await navigator.share({
-          title: 'My Wine Favorites',
-          text: text,
+          title: 'My SIP SAGE AI Favorites',
+          text: shareText,
         });
         return;
       }
 
-      // Fallback: copy to clipboard
-      await navigator.clipboard.writeText(text);
-      setToast('✅ Copied to clipboard – ready to share!');
+      await navigator.clipboard.writeText(shareText);
+      setToast('✅ Copied to clipboard – ready for Instagram or Messages!');
       setTimeout(() => setToast(''), 3000);
     } catch (err) {
       console.error(err);
@@ -138,10 +136,10 @@ export default function Recommendations() {
               </div>
               <button
                 onClick={shareFavorites}
-                className="flex items-center gap-2 text-[#1A3C35] font-medium text-sm border border-[#1A3C35]/30 px-5 py-2 rounded-3xl hover:bg-white transition-colors"
+                className="flex items-center gap-2 px-6 py-3 bg-white border border-[#1A3C35] text-[#1A3C35] rounded-3xl text-sm font-medium hover:bg-[#1A3C35] hover:text-white transition-all"
               >
                 <Share2 size={18} />
-                Share Favorites
+                Share to Social
               </button>
             </div>
 
@@ -251,7 +249,7 @@ export default function Recommendations() {
 
       {/* Toast */}
       {toast && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#1F2521] text-white text-lg px-8 py-4 rounded-3xl shadow-2xl">
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#1F2521] text-white text-lg px-8 py-4 rounded-3xl shadow-2xl z-50">
           {toast}
         </div>
       )}

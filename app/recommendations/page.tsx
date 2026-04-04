@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Wine, Sparkles, RefreshCw } from 'lucide-react';
 
 export default function Recommendations() {
@@ -34,15 +34,20 @@ export default function Recommendations() {
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
+    hidden: { 
+      opacity: 0, 
+      y: 60,
+      scale: 0.95 
+    },
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
+      scale: 1,
       transition: {
         type: "spring",
-        stiffness: 100,
-        damping: 15,
-        delay: i * 0.08
+        stiffness: 80,
+        damping: 18,
+        delay: i * 0.07
       }
     })
   };
@@ -104,11 +109,12 @@ export default function Recommendations() {
                   key={index}
                   custom={index}
                   initial="hidden"
-                  animate="visible"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-50px" }}
                   variants={cardVariants}
-                  whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                  whileTap={{ scale: 0.98 }}
-                  className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8"
+                  whileHover={{ y: -12, scale: 1.02, transition: { duration: 0.2 } }}
+                  whileTap={{ scale: 0.97 }}
+                  className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8 cursor-pointer"
                 >
                   {index > 0 && (
                     <div className="h-px bg-gradient-to-r from-transparent via-[#C36A4F] to-transparent mb-10"></div>

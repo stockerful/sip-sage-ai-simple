@@ -1,11 +1,7 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
-import dynamic from 'next/dynamic';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Wine, Sparkles, Heart, Share2, RefreshCw, ChevronDown, Star } from 'lucide-react';
-
-// Dynamically import heavy animation library
-const MotionDiv = dynamic(() => import('framer-motion').then((mod) => mod.motion.div), { ssr: false });
-const AnimatePresence = dynamic(() => import('framer-motion').then((mod) => mod.AnimatePresence), { ssr: false });
 
 export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
@@ -15,7 +11,7 @@ export default function Recommendations() {
   const [favoritesOpen, setFavoritesOpen] = useState(true);
   const [ratings, setRatings] = useState<{[key: string]: number}>({});
 
-  const getAverageRating = useCallback((wine: any) => {
+  const getAverageRating = (wine: any) => {
     const key = `${wine.wine_name}-${wine.vintage || ''}`;
     const averages: {[key: string]: {rating: number, count: number}} = {
       'Domaine Drouhin': { rating: 4.7, count: 23 },
@@ -23,7 +19,7 @@ export default function Recommendations() {
       'Patricia Green': { rating: 4.4, count: 15 },
     };
     return averages[key] || { rating: 4.5, count: 18 };
-  }, []);
+  };
 
   useEffect(() => {
     const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
@@ -32,16 +28,16 @@ export default function Recommendations() {
     setRatings(savedRatings);
   }, []);
 
-  const getWineKey = useCallback((wine: any) => `${wine.wine_name}-${wine.vintage || ''}`, []);
+  const getWineKey = (wine: any) => `${wine.wine_name}-${wine.vintage || ''}`;
 
-  const rateWine = useCallback((wine: any, rating: number) => {
+  const rateWine = (wine: any, rating: number) => {
     const key = getWineKey(wine);
     const newRatings = { ...ratings, [key]: rating };
     setRatings(newRatings);
     localStorage.setItem('wineRatings', JSON.stringify(newRatings));
-  }, [ratings, getWineKey]);
+  };
 
-  const toggleFavorite = useCallback((wine: any) => {
+  const toggleFavorite = (wine: any) => {
     const key = getWineKey(wine);
     const exists = favorites.some((f) => getWineKey(f) === key);
     let newFavorites = exists 
@@ -49,7 +45,7 @@ export default function Recommendations() {
       : [...favorites, wine];
     setFavorites(newFavorites);
     localStorage.setItem('favorites', JSON.stringify(newFavorites));
-  }, [favorites, getWineKey]);
+  };
 
   const shareIndividual = async (wine: any) => {
     const text = `${wine.wine_name} ${wine.vintage} — ${wine.why_it_matches}`;
@@ -83,7 +79,7 @@ export default function Recommendations() {
 
   return (
     <div className="min-h-screen pb-12 bg-[#F9F5F0] text-[#1F2521]">
-      {/* Header */}
+      {/* Centered Header */}
       <div className="flex items-center justify-center pt-6 pb-4 border-b border-[#EDE8E0]">
         <div className="flex items-center gap-3">
           <Wine className="w-8 h-8 text-[#9C2C2C]" />
@@ -147,12 +143,12 @@ export default function Recommendations() {
 
             <div className="grid gap-12">
               {result.recommendations.map((wine: any, index: number) => {
-                const key = getWineKey(wine);
+                const key = `${wine.wine_name}-${wine.vintage || ''}`;
                 const userRating = ratings[key] || 0;
                 const avg = getAverageRating(wine);
-                const isFavorited = favorites.some((f) => getWineKey(f) === key);
+                const isFavorited = favorites.some((f) => `${f.wine_name}-${f.vintage || ''}` === key);
                 return (
-                  <MotionDiv
+                  <motion.div
                     key={index}
                     custom={index}
                     initial="hidden"
@@ -166,7 +162,7 @@ export default function Recommendations() {
                     <p className="mt-6 text-lg leading-relaxed opacity-90">{wine.tasting_note}</p>
                     <p className="mt-4 text-[#9C2C2C] font-medium">{wine.why_it_matches}</p>
 
-                    {/* Pricing - close gap as requested */}
+                    {/* Pricing - very close gap as requested */}
                     <div className="mt-12 space-y-8">
                       <div className="flex items-baseline gap-5">
                         <div className="text-xs uppercase tracking-widest opacity-60 w-28">BY THE GLASS</div>
@@ -204,6 +200,7 @@ export default function Recommendations() {
                       {userRating > 0 && <span className="ml-2 text-sm font-medium text-[#9C2C2C]">{userRating}/5</span>}
                     </div>
 
+                    {/* Heart + Share with proper filled animation */}
                     <div className="flex justify-end gap-6 mt-8">
                       <motion.button
                         onClick={() => toggleFavorite(wine)}
@@ -222,7 +219,7 @@ export default function Recommendations() {
                         <Share2 size={32} />
                       </motion.button>
                     </div>
-                  </MotionDiv>
+                  </motion.div>
                 );
               })}
             </div>

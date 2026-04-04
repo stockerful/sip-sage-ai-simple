@@ -154,6 +154,7 @@ export default function Recommendations() {
                         </div>
 
                         <div className="flex items-center gap-6">
+                          {/* Seamless X.com-style Heart */}
                           <button
                             onClick={() => toggleFavorite(wine)}
                             className="text-3xl transition-all hover:scale-110 active:scale-95 text-red-500"
@@ -161,6 +162,7 @@ export default function Recommendations() {
                             ❤️
                           </button>
 
+                          {/* Seamless X.com-style Share */}
                           <button
                             onClick={() => shareIndividual(wine)}
                             className="text-[#1F2521] hover:text-[#1A3C35] transition-all hover:scale-110 active:scale-95"

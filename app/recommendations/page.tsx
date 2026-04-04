@@ -1,8 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wine, Sparkles, Heart, Share2, RefreshCw, ChevronDown, Star } from 'lucide-react';
-import Image from 'next/image';
+import { Sparkles, Heart, Share2, RefreshCw, ChevronDown, Star } from 'lucide-react';
 
 export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
@@ -80,20 +79,9 @@ export default function Recommendations() {
 
   return (
     <div className="min-h-screen pb-12 bg-[#F9F5F0] text-[#1F2521]">
-      {/* Centered Header with optimized logo */}
+      {/* Centered Header - plain text title, no Wine icon */}
       <div className="flex items-center justify-center pt-6 pb-4 border-b border-[#EDE8E0]">
-        <div className="flex items-center gap-3">
-          <Wine className="w-8 h-8 text-[#9C2C2C]" />
-          <Image
-            src="/sip-sage-ai-logo.png"
-            alt="SIP SAGE AI"
-            width={280}
-            height={100}
-            priority
-            className="drop-shadow-lg"
-            style={{ width: 'auto', height: '100px' }}
-          />
-        </div>
+        <h1 className="text-4xl font-bold tracking-tighter">SIP SAGE AI</h1>
       </div>
 
       {/* Favorites at top */}

@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Wine, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -15,15 +15,15 @@ export default function Home() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="text-center"
         >
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <Wine className="w-14 h-14 text-[#9C2C2C]" />
+          {/* Logo image only - no Wine icon */}
+          <div className="mb-8">
             <Image
               src="/sip-sage-ai-logo.png"
               alt="SIP SAGE AI"
               width={320}
               height={120}
               priority
-              className="drop-shadow-lg"
+              className="drop-shadow-lg mx-auto"
               style={{ width: 'auto', height: '120px' }}
             />
           </div>

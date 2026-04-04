@@ -32,7 +32,7 @@ export default function Recommendations() {
   };
 
   const shareIndividual = async (wine: any) => {
-    const text = `🍷 My SIP SAGE AI Favorite:\n${wine.wine_name} ${wine.vintage}\n${wine.tasting_note}\n\nBottle $${wine.price_bottle} | Glass $${wine.price_glass}\n\n#SipSageAI #OregonWine`;
+    const text = `🍷 SIP SAGE AI Favorite\n${wine.wine_name} ${wine.vintage}\n${wine.tasting_note}\n\nBottle $${wine.price_bottle} | Glass $${wine.price_glass}\n\n#SipSageAI #OregonWine`;
 
     try {
       if (navigator.share) {
@@ -120,17 +120,14 @@ export default function Recommendations() {
           <div className="mb-16">
             <button
               onClick={() => setFavoritesOpen(!favoritesOpen)}
-              className="w-full flex items-center justify-between bg-white rounded-3xl shadow-sm border border-[#EDE8E0] px-8 py-6 text-left"
+              className="w-full flex items-center justify-between bg-white rounded-3xl shadow-sm border border-[#EDE8E0] px-8 py-6 text-left hover:bg-[#F8F9F7] transition-colors"
             >
               <div className="flex items-center gap-3">
-                <Heart className="text-red-500" size={26} fill="currentColor" />
+                <Heart className="text-red-500" size={24} fill="currentColor" />
                 <h3 className="text-2xl font-medium text-[#1F2521]">Your Favorites</h3>
                 <span className="text-sm text-[#8A9E8E] bg-[#F8F9F7] px-3 py-1 rounded-2xl">{favorites.length}</span>
               </div>
-              <motion.div
-                animate={{ rotate: favoritesOpen ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
+              <motion.div animate={{ rotate: favoritesOpen ? 180 : 0 }} transition={{ duration: 0.3 }}>
                 <ChevronDown size={24} />
               </motion.div>
             </button>
@@ -158,16 +155,19 @@ export default function Recommendations() {
                           <p className="text-[#1A3C35] mt-3 line-clamp-2">{wine.tasting_note}</p>
                         </div>
 
-                        <div className="flex gap-4">
+                        <div className="flex items-center gap-5">
+                          {/* Modern X.com-style Heart */}
                           <button
                             onClick={() => toggleFavorite(wine)}
-                            className="text-3xl text-red-500 hover:text-red-600 transition-colors"
+                            className="text-3xl transition-all hover:scale-110 active:scale-95"
                           >
                             ❤️
                           </button>
+
+                          {/* Modern X.com-style Share */}
                           <button
                             onClick={() => shareIndividual(wine)}
-                            className="text-[#1A3C35] hover:text-[#132B28] transition-colors"
+                            className="text-[#1F2521] hover:text-[#1A3C35] transition-colors"
                           >
                             <Share2 size={26} />
                           </button>
@@ -215,7 +215,7 @@ export default function Recommendations() {
                     </h3>
                     <button
                       onClick={(e) => { e.stopPropagation(); toggleFavorite(wine); }}
-                      className="text-3xl transition-colors"
+                      className="text-3xl transition-all hover:scale-110 active:scale-95"
                     >
                       {favorites.some(f => f.wine_name === wine.wine_name) ? '❤️' : '♡'}
                     </button>

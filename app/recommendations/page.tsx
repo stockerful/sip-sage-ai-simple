@@ -73,8 +73,18 @@ export default function Recommendations() {
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: (i: number) => ({ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 15, delay: i * 0.08 } })
+    hidden: { opacity: 0, y: 60, scale: 0.95 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 90,
+        damping: 18,
+        delay: i * 0.07
+      }
+    })
   };
 
   return (
@@ -87,7 +97,7 @@ export default function Recommendations() {
         </div>
       </div>
 
-      {/* Your Favorites - Now perfectly integrated at the top */}
+      {/* Your Favorites - fully refined */}
       {favorites.length > 0 && (
         <div className="max-w-2xl mx-auto px-6 mt-10">
           <div className="flex items-center gap-3 mb-6">
@@ -102,7 +112,7 @@ export default function Recommendations() {
             <div className="h-px flex-1 bg-[#EDE8E0]"></div>
           </div>
 
-          <AnimatePresence>
+          <AnimatePresence mode="popLayout">
             {favoritesOpen && (
               <motion.div 
                 initial={{ height: 0, opacity: 0 }} 
@@ -113,6 +123,7 @@ export default function Recommendations() {
                 {favorites.map((wine, i) => (
                   <motion.div 
                     key={i} 
+                    layout
                     className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8"
                   >
                     <h4 className="text-2xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h4>
@@ -180,9 +191,10 @@ export default function Recommendations() {
                     key={index}
                     custom={index}
                     initial="hidden"
-                    animate="visible"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-50px" }}
                     variants={cardVariants}
-                    whileHover={{ y: -8 }}
+                    whileHover={{ y: -8, scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8"
                   >

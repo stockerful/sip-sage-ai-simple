@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Wine, Sparkles, RefreshCw, Heart, Share2, ChevronDown } from 'lucide-react';
 
 export default function Recommendations() {
@@ -127,9 +127,7 @@ export default function Recommendations() {
                 <h3 className="text-2xl font-medium text-[#1F2521]">Your Favorites</h3>
                 <span className="text-sm text-[#8A9E8E] bg-[#F8F9F7] px-3 py-1 rounded-2xl">{favorites.length}</span>
               </div>
-              <motion.div animate={{ rotate: favoritesOpen ? 180 : 0 }} transition={{ duration: 0.3 }}>
-                <ChevronDown size={24} />
-              </motion.div>
+              <ChevronDown size={24} className={`transition-transform ${favoritesOpen ? 'rotate-180' : ''}`} />
             </button>
 
             <AnimatePresence>
@@ -156,7 +154,6 @@ export default function Recommendations() {
                         </div>
 
                         <div className="flex items-center gap-6">
-                          {/* Seamless modern heart */}
                           <button
                             onClick={() => toggleFavorite(wine)}
                             className="text-3xl transition-all hover:scale-110 active:scale-95 text-red-500"
@@ -164,7 +161,6 @@ export default function Recommendations() {
                             ❤️
                           </button>
 
-                          {/* Seamless modern share */}
                           <button
                             onClick={() => shareIndividual(wine)}
                             className="text-[#1F2521] hover:text-[#1A3C35] transition-all hover:scale-110 active:scale-95"

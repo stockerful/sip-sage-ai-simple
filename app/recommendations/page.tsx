@@ -151,7 +151,7 @@ export default function Recommendations() {
         )}
       </div>
 
-      {/* Modal */}
+      {/* Enhanced Modal */}
       <AnimatePresence>
         {selectedWine && (
           <motion.div
@@ -162,13 +162,13 @@ export default function Recommendations() {
             onClick={() => setSelectedWine(null)}
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
+              initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
+              exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopImmediatePropagation()}
-              className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
+              className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
             >
-              {/* Bottle Image */}
+              {/* Large bottle image */}
               <div className="h-96 bg-[#F8F9F7] flex items-center justify-center relative">
                 <img
                   src="https://picsum.photos/id/1015/800/800"
@@ -177,14 +177,14 @@ export default function Recommendations() {
                 />
                 <button
                   onClick={() => setSelectedWine(null)}
-                  className="absolute top-6 right-6 bg-white rounded-full p-3 shadow-lg"
+                  className="absolute top-6 right-6 bg-white/90 hover:bg-white rounded-2xl p-3 shadow-lg transition-colors"
                 >
-                  <X size={24} />
+                  <X size={24} className="text-[#1F2521]" />
                 </button>
               </div>
 
               <div className="p-8">
-                <h2 className="text-4xl font-serif font-semibold text-[#1F2521]">
+                <h2 className="text-4xl font-serif font-semibold text-[#1F2521] leading-none">
                   {selectedWine.wine_name} <span className="text-3xl text-[#8A9E8E]">{selectedWine.vintage}</span>
                 </h2>
 
@@ -200,23 +200,26 @@ export default function Recommendations() {
                 </div>
 
                 {/* Cool details */}
-                <div className="mt-8 grid grid-cols-2 gap-6 text-sm">
+                <div className="mt-8 grid grid-cols-2 gap-8">
                   <div>
                     <div className="font-medium text-[#1F2521]">Cool Fact</div>
-                    <p className="text-[#8A9E8E]">Grown in the historic Dundee Hills AVA with volcanic soils</p>
+                    <p className="text-[#8A9E8E] mt-1">Grown in the historic Dundee Hills AVA with volcanic soils that give it incredible minerality.</p>
                   </div>
                   <div>
                     <div className="font-medium text-[#1F2521]">Perfect Pairing</div>
-                    <p className="text-[#8A9E8E]">Salmon, mushroom risotto, or aged cheeses</p>
+                    <p className="text-[#8A9E8E] mt-1">Salmon, mushroom risotto, aged cheeses, or roasted duck.</p>
                   </div>
                 </div>
 
-                <div className="mt-10 flex justify-between text-2xl font-bold">
-                  <div className="text-[#C36A4F]">
-                    Glass ${selectedWine.price_glass}
+                {/* Pricing */}
+                <div className="mt-10 flex justify-between items-center border-t border-[#EDE8E0] pt-8">
+                  <div>
+                    <div className="text-xs uppercase tracking-widest text-[#C36A4F]">BY THE GLASS</div>
+                    <div className="text-4xl font-bold text-[#C36A4F]">${selectedWine.price_glass}</div>
                   </div>
-                  <div className="text-[#1F2521]">
-                    Bottle ${selectedWine.price_bottle}
+                  <div className="text-right">
+                    <div className="text-xs uppercase tracking-widest text-[#1F2521]">BOTTLE</div>
+                    <div className="text-4xl font-bold text-[#1F2521]">${selectedWine.price_bottle}</div>
                   </div>
                 </div>
               </div>

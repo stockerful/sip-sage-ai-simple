@@ -34,15 +34,6 @@ export default function Recommendations() {
     setResult(null);
   };
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 15, delay: i * 0.08 }
-    })
-  };
-
   return (
     <div className="min-h-screen bg-[#F8F9F7] font-sans pb-20">
       <div className="pt-10 pb-8 text-center border-b border-[#EDE8E0]">
@@ -98,14 +89,11 @@ export default function Recommendations() {
               {result.recommendations?.map((wine: any, index: number) => (
                 <motion.div
                   key={index}
-                  custom={index}
-                  initial="hidden"
-                  animate="visible"
-                  variants={cardVariants}
-                  whileHover={{ y: -6 }}
-                  whileTap={{ scale: 0.98 }}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
                   onClick={() => setSelectedWine(wine)}
-                  className="wine-card cursor-pointer bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8"
+                  className="wine-card cursor-pointer bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8 hover:shadow-xl transition-all"
                 >
                   {index > 0 && (
                     <div className="h-px bg-gradient-to-r from-transparent via-[#C36A4F] to-transparent mb-10"></div>
@@ -137,7 +125,7 @@ export default function Recommendations() {
                     </div>
                   </div>
 
-                  {/* Clear "Tap to view bottle" button */}
+                  {/* Clear visible tap area */}
                   <div className="mt-10 flex items-center justify-center gap-2 text-[#C36A4F] text-sm font-medium border border-[#C36A4F]/30 rounded-2xl py-3 hover:bg-[#C36A4F]/5 transition-colors">
                     <Eye size={18} />
                     Tap to view bottle details
@@ -157,7 +145,7 @@ export default function Recommendations() {
         )}
       </div>
 
-      {/* Enhanced Modal */}
+      {/* Modal */}
       <AnimatePresence>
         {selectedWine && (
           <motion.div
@@ -174,6 +162,7 @@ export default function Recommendations() {
               onClick={(e) => e.stopImmediatePropagation()}
               className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
             >
+              {/* Bottle image */}
               <div className="h-96 bg-[#F8F9F7] flex items-center justify-center relative">
                 <img
                   src="https://picsum.photos/id/1015/800/800"
@@ -182,14 +171,14 @@ export default function Recommendations() {
                 />
                 <button
                   onClick={() => setSelectedWine(null)}
-                  className="absolute top-6 right-6 bg-white/90 hover:bg-white rounded-2xl p-3 shadow-lg transition-colors"
+                  className="absolute top-6 right-6 bg-white rounded-2xl p-3 shadow-lg hover:bg-gray-100"
                 >
-                  <X size={24} className="text-[#1F2521]" />
+                  <X size={24} />
                 </button>
               </div>
 
               <div className="p-8">
-                <h2 className="text-4xl font-serif font-semibold text-[#1F2521] leading-none">
+                <h2 className="text-4xl font-serif font-semibold text-[#1F2521]">
                   {selectedWine.wine_name} <span className="text-3xl text-[#8A9E8E]">{selectedWine.vintage}</span>
                 </h2>
 
@@ -204,14 +193,14 @@ export default function Recommendations() {
                   </p>
                 </div>
 
-                <div className="mt-8 grid grid-cols-2 gap-8">
+                <div className="mt-8 grid grid-cols-2 gap-8 text-sm">
                   <div>
                     <div className="font-medium text-[#1F2521]">Cool Fact</div>
-                    <p className="text-[#8A9E8E] mt-1">Grown in the historic Dundee Hills AVA with volcanic soils that give it incredible minerality.</p>
+                    <p className="text-[#8A9E8E]">Grown in the historic Dundee Hills AVA with volcanic soils that give it incredible minerality.</p>
                   </div>
                   <div>
                     <div className="font-medium text-[#1F2521]">Perfect Pairing</div>
-                    <p className="text-[#8A9E8E] mt-1">Salmon, mushroom risotto, aged cheeses, or roasted duck.</p>
+                    <p className="text-[#8A9E8E]">Salmon, mushroom risotto, aged cheeses, or roasted duck.</p>
                   </div>
                 </div>
 

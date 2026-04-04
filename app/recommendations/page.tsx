@@ -1,6 +1,6 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Wine, Sparkles, Heart, Share2, RefreshCw, ChevronDown, Star } from 'lucide-react';
 
 export default function Recommendations() {
@@ -73,57 +73,27 @@ export default function Recommendations() {
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 60 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { type: 'spring', stiffness: 90, damping: 18, delay: i * 0.07 }
-    })
+    hidden: { opacity: 0, y: 40 },
+    visible: (i: number) => ({ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 15, delay: i * 0.08 } })
   };
 
-  // Parallax Background Setup
-  const { scrollYProgress } = useScroll();
-  const bg1 = useTransform(scrollYProgress, [0, 1], ['0%', '-15%']);
-  const bg2 = useTransform(scrollYProgress, [0, 1], ['0%', '-30%']);
-
   return (
-    <div className="min-h-screen pb-12 bg-[#F9F5F0] text-[#1F2521] relative overflow-hidden">
-      {/* Parallax Background Layers */}
-      <div className="fixed inset-0 pointer-events-none z-[-1]">
-        {/* Layer 1 - Base soft gradient (slowest) */}
-        <motion.div
-          style={{ y: bg1 }}
-          className="absolute inset-0 bg-[radial-gradient(at_top_left,#F9F5F0_0%,#F0E9DF_100%)]"
-        />
-        
-        {/* Layer 2 - Subtle glowing orbs (medium speed) */}
-        <motion.div
-          style={{ y: bg2 }}
-          className="absolute inset-0 opacity-30"
-          style={{
-            background: `radial-gradient(circle at 20% 30%, rgba(156,44,44,0.08) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 70%, rgba(156,44,44,0.06) 0%, transparent 50%)`,
-          }}
-        />
-
-        {/* Layer 3 - Very faint texture (fastest) */}
-        <motion.div
-          style={{ y: useTransform(scrollYProgress, [0, 1], ['0%', '-45%']) }}
-          className="absolute inset-0 opacity-10 bg-[radial-gradient(#9C2C2C_0.8px,transparent_0)] bg-[length:40px_40px]"
-        />
-      </div>
-
-      {/* Centered Header */}
-      <div className="flex items-center justify-center pt-6 pb-4 border-b border-[#EDE8E0] relative z-10">
+    <div className="min-h-screen pb-12 bg-[#F9F5F0] text-[#1F2521]">
+      {/* Centered Header with new logo image */}
+      <div className="flex items-center justify-center pt-6 pb-4 border-b border-[#EDE8E0]">
         <div className="flex items-center gap-3">
           <Wine className="w-8 h-8 text-[#9C2C2C]" />
-          <h1 className="text-4xl font-bold tracking-tighter">SIP SAGE AI</h1>
+          <img 
+            src="/sip-sage-ai-logo.png" 
+            alt="SIP SAGE AI" 
+            className="h-12 w-auto"
+          />
         </div>
       </div>
 
       {/* Favorites at top */}
       {favorites.length > 0 && (
-        <div className="max-w-2xl mx-auto px-6 mt-10 relative z-10">
+        <div className="max-w-2xl mx-auto px-6 mt-10">
           <div className="flex items-center gap-3 mb-6">
             <div className="h-px flex-1 bg-[#EDE8E0]"></div>
             <button 
@@ -159,7 +129,7 @@ export default function Recommendations() {
         </div>
       )}
 
-      <div className="max-w-2xl mx-auto px-6 relative z-10">
+      <div className="max-w-2xl mx-auto px-6">
         <form onSubmit={handleSubmit} className="mt-8">
           <textarea
             value={preferences}
@@ -196,10 +166,9 @@ export default function Recommendations() {
                     key={index}
                     custom={index}
                     initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-50px" }}
+                    animate="visible"
                     variants={cardVariants}
-                    whileHover={{ y: -8, scale: 1.02 }}
+                    whileHover={{ y: -8 }}
                     whileTap={{ scale: 0.98 }}
                     className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8"
                   >
@@ -243,20 +212,10 @@ export default function Recommendations() {
                     </div>
 
                     <div className="flex justify-end gap-6 mt-8">
-                      <motion.button
-                        onClick={() => toggleFavorite(wine)}
-                        whileHover={{ scale: 1.2 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="transition-all"
-                      >
+                      <motion.button onClick={() => toggleFavorite(wine)} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} className="transition-all">
                         <Heart className={`w-9 h-9 ${isFavorited ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#9C2C2C]'}`} strokeWidth={isFavorited ? 0 : 2} />
                       </motion.button>
-                      <motion.button
-                        onClick={() => shareIndividual(wine)}
-                        whileHover={{ scale: 1.15 }}
-                        whileTap={{ scale: 0.85 }}
-                        className="text-[#1F2521]"
-                      >
+                      <motion.button onClick={() => shareIndividual(wine)} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.85 }} className="text-[#1F2521]">
                         <Share2 size={32} />
                       </motion.button>
                     </div>

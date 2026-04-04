@@ -14,9 +14,14 @@ export default function Home() {
           transition={{ duration: 1, ease: "easeOut" }}
           className="text-center"
         >
+          {/* New Logo Image replacing the text */}
           <div className="flex items-center justify-center gap-3 mb-8">
             <Wine className="w-14 h-14 text-[#9C2C2C]" />
-            <h1 className="text-7xl font-bold tracking-tighter">SIP SAGE AI</h1>
+            <img 
+              src="/sip-sage-ai-logo.png" 
+              alt="SIP SAGE AI" 
+              className="h-24 w-auto mx-auto drop-shadow-lg"
+            />
           </div>
 
           <p className="text-3xl font-light text-[#4A2C1F]/80 mb-16">

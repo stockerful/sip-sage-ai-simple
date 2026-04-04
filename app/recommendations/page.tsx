@@ -33,18 +33,18 @@ export default function Recommendations() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F0] font-sans pb-20">
-      {/* Clean iOS-style header */}
-      <div className="pt-10 pb-8 text-center border-b border-[#E8E2D5]">
-        <h1 className="text-5xl font-serif tracking-[-1px] text-[#2C2C2C]">
+    <div className="min-h-screen bg-[#F9F5ED] font-sans pb-20">
+      {/* Header */}
+      <div className="pt-10 pb-8 text-center border-b border-[#E5D9C8]">
+        <h1 className="text-5xl font-serif tracking-[-1px] text-[#1F1F1F]">
           SIP SAGE AI
         </h1>
       </div>
 
       <div className="max-w-3xl mx-auto px-6 pt-8">
-        {/* Prompt area */}
-        <div className="bg-white rounded-3xl shadow-sm border border-[#D4C9B8] p-8 mb-12">
-          <h2 className="text-2xl font-medium text-[#2C2C2C] mb-6 text-center">
+        {/* Prompt */}
+        <div className="bg-white rounded-3xl shadow-sm border border-[#E5D9C8] p-8 mb-12">
+          <h2 className="text-2xl font-medium text-[#1F1F1F] mb-6 text-center">
             What kind of wine are you craving today?
           </h2>
           
@@ -53,14 +53,14 @@ export default function Recommendations() {
               value={preferences}
               onChange={(e) => setPreferences(e.target.value)}
               placeholder="Bright fruit-forward Pinot Noir... Earthy reds... Crisp Chardonnay..."
-              className="w-full h-40 px-6 py-6 text-xl border border-[#D4C9B8] rounded-3xl focus:outline-none focus:border-[#4A0F1F] resize-none leading-relaxed"
+              className="w-full h-40 px-6 py-6 text-xl border border-[#E5D9C8] rounded-3xl focus:outline-none focus:border-[#3F1A2E] resize-none leading-relaxed"
               disabled={loading}
             />
             
             <button
               type="submit"
               disabled={loading || !preferences.trim()}
-              className="mt-8 w-full bg-[#4A0F1F] hover:bg-[#3A0C18] active:scale-[0.97] disabled:bg-gray-300 text-white text-2xl font-medium py-7 rounded-3xl transition-all flex items-center justify-center gap-3 shadow-lg"
+              className="mt-8 w-full bg-[#3F1A2E] hover:bg-[#2C1321] active:scale-[0.97] disabled:bg-gray-300 text-white text-2xl font-medium py-7 rounded-3xl transition-all flex items-center justify-center gap-3 shadow-lg"
             >
               {loading ? (
                 <>
@@ -77,11 +77,11 @@ export default function Recommendations() {
           </form>
         </div>
 
-        {/* Results with advanced iOS card animations */}
+        {/* Results */}
         {result && (
           <div className="space-y-16">
             <div className="text-center px-4">
-              <p className="text-[#6F7F5F] text-lg leading-relaxed">
+              <p className="text-[#5E7A5E] text-lg leading-relaxed">
                 {result.explanation || "Here are your personalized recommendations from the Willamette Valley."}
               </p>
             </div>
@@ -90,38 +90,36 @@ export default function Recommendations() {
               {result.recommendations?.map((wine: any, index: number) => (
                 <div
                   key={index}
-                  className="wine-card group bg-white rounded-3xl shadow-md border border-[#D4C9B8] overflow-hidden p-8 active:scale-[0.98] transition-all duration-300 ease-out hover:shadow-2xl"
-                  style={{ animationDelay: `${index * 80}ms` }}
+                  className="wine-card bg-white rounded-3xl shadow-md border border-[#E5D9C8] overflow-hidden p-8 active:scale-[1.02] transition-all"
                 >
-                  {/* Strong visible iOS-style divider */}
                   {index > 0 && (
-                    <div className="h-px bg-gradient-to-r from-transparent via-[#8C6F5C] to-transparent mb-10"></div>
+                    <div className="h-px bg-gradient-to-r from-transparent via-[#D4A017] to-transparent mb-10"></div>
                   )}
 
-                  <h3 className="text-4xl font-serif font-semibold text-[#2C2C2C] leading-none mb-1">
+                  <h3 className="text-4xl font-serif font-semibold text-[#1F1F1F] leading-none mb-1">
                     {wine.wine_name}
                   </h3>
-                  <span className="text-3xl text-[#6F7F5F] block mb-8">{wine.vintage}</span>
+                  <span className="text-3xl text-[#5E7A5E] block mb-8">{wine.vintage}</span>
 
-                  <p className="text-[#4A0F1F] text-xl leading-relaxed mb-8">
+                  <p className="text-[#3F1A2E] text-xl leading-relaxed mb-8">
                     {wine.tasting_note}
                   </p>
 
-                  <div className="border-t border-[#D4C9B8] pt-8">
-                    <div className="text-[#6F7F5F] uppercase text-sm tracking-widest mb-2">Why it matches</div>
-                    <p className="text-[#2C2C2C] text-lg leading-relaxed">
+                  <div className="border-t border-[#E5D9C8] pt-8">
+                    <div className="text-[#5E7A5E] uppercase text-sm tracking-widest mb-2">Why it matches</div>
+                    <p className="text-[#1F1F1F] text-lg leading-relaxed">
                       {wine.why_it_matches}
                     </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-8 mt-12">
                     <div>
-                      <div className="text-xs uppercase tracking-widest text-[#A65E3C]">By the Glass</div>
-                      <div className="text-5xl font-bold text-[#4A0F1F]">${wine.price_glass}</div>
+                      <div className="text-xs uppercase tracking-widest text-[#D4A017]">By the Glass</div>
+                      <div className="text-5xl font-bold text-[#3F1A2E]">${wine.price_glass}</div>
                     </div>
                     <div>
-                      <div className="text-xs uppercase tracking-widest text-[#2C2C2C]">Bottle</div>
-                      <div className="text-5xl font-bold text-[#2C2C2C]">${wine.price_bottle}</div>
+                      <div className="text-xs uppercase tracking-widest text-[#1F1F1F]">Bottle</div>
+                      <div className="text-5xl font-bold text-[#1F1F1F]">${wine.price_bottle}</div>
                     </div>
                   </div>
                 </div>
@@ -130,7 +128,7 @@ export default function Recommendations() {
 
             <button
               onClick={clearAll}
-              className="w-full flex items-center justify-center gap-3 py-6 text-[#4A0F1F] font-medium text-xl border-2 border-[#D4C9B8] rounded-3xl hover:bg-white active:scale-95 transition-all mx-auto max-w-xs"
+              className="w-full flex items-center justify-center gap-3 py-6 text-[#3F1A2E] font-medium text-xl border-2 border-[#E5D9C8] rounded-3xl hover:bg-white active:scale-95 transition-all mx-auto max-w-xs"
             >
               <RefreshCw size={24} />
               New Recommendation

@@ -4,13 +4,12 @@
 
 @layer base {
   :root {
-    --background: 248 4% 96%;   /* Soft warm off-white */
+    --background: 37 11% 97%;   /* #F9F5ED */
   }
 }
 
 body {
   font-feature-settings: "rlig" 1, "calt" 1;
-  font-size: 18px; /* Base size for all ages */
 }
 
 @layer utilities {

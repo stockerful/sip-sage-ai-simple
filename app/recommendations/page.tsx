@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wine, Sparkles, Heart, Share2, RefreshCw, ChevronDown } from 'lucide-react';
+import { Wine, Sparkles, Heart, Share2, RefreshCw, ChevronDown, Moon, Sun } from 'lucide-react';
 
 export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
@@ -47,7 +47,7 @@ export default function Recommendations() {
       await navigator.share({ title: wine.wine_name, text });
     } else {
       await navigator.clipboard.writeText(text);
-      alert('Copied to clipboard!');
+      alert('✅ Copied to clipboard!');
     }
   };
 
@@ -86,7 +86,10 @@ export default function Recommendations() {
           <Wine className="w-8 h-8 text-[#D97F3E]" />
           <h1 className="text-4xl font-bold tracking-tighter">SIP SAGE AI</h1>
         </div>
-        <button onClick={toggleDarkMode} className="p-3 rounded-2xl bg-white dark:bg-[#3F1C2B] border border-[#EDE8E0] dark:border-[#E89F6F]">
+        <button 
+          onClick={toggleDarkMode} 
+          className="p-3 rounded-2xl bg-white dark:bg-[#3F1C2B] border border-[#EDE8E0] dark:border-[#E89F6F] hover:scale-110 transition-all"
+        >
           {darkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
         </button>
       </div>
@@ -135,24 +138,21 @@ export default function Recommendations() {
                   whileTap={{ scale: 0.98 }}
                   className="wine-card bg-white dark:bg-[#3F1C2B] rounded-3xl shadow-md border border-[#EDE8E0] dark:border-[#E89F6F] overflow-hidden p-8"
                 >
-                  {/* Wine card content with vintage + pricing as requested */}
                   <h3 className="text-4xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h3>
                   <p className="mt-6 text-lg leading-relaxed opacity-90">{wine.tasting_note}</p>
                   <p className="mt-4 text-[#D97F3E] font-medium">{wine.why_it_matches}</p>
 
-                  {/* Pricing - stacked and close together */}
                   <div className="mt-12 grid grid-cols-2 gap-8">
                     <div>
                       <div className="text-xs uppercase tracking-widest opacity-60">BOTTLE</div>
-                      <div className="text-6xl font-bold text-[#1F2521] dark:text-[#F8F4EF]">${wine.price_bottle}</div>
+                      <div className="text-6xl font-bold">${wine.price_bottle}</div>
                     </div>
                     <div>
                       <div className="text-xs uppercase tracking-widest opacity-60">BY THE GLASS</div>
-                      <div className="text-6xl font-bold text-[#1F2521] dark:text-[#F8F4EF]">${wine.price_glass}</div>
+                      <div className="text-6xl font-bold">${wine.price_glass}</div>
                     </div>
                   </div>
 
-                  {/* Heart + Share buttons - seamless X.com style */}
                   <div className="flex justify-end gap-6 mt-8">
                     <motion.button
                       onClick={() => toggleFavorite(wine)}

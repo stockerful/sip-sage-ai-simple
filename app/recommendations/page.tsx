@@ -30,18 +30,17 @@ export default function Recommendations() {
 
   const toggleFavorite = (wine: any) => {
     const exists = favorites.some((f) => f.wine_name === wine.wine_name);
-    let newFavorites;
-    if (exists) newFavorites = favorites.filter((f) => f.wine_name !== wine.wine_name);
-    else newFavorites = [...favorites, wine];
+    let newFavorites = exists 
+      ? favorites.filter((f) => f.wine_name !== wine.wine_name)
+      : [...favorites, wine];
     setFavorites(newFavorites);
     localStorage.setItem('favorites', JSON.stringify(newFavorites));
   };
 
   const shareIndividual = async (wine: any) => {
     const text = `${wine.wine_name} ${wine.vintage} — ${wine.why_it_matches}`;
-    if (navigator.share) {
-      await navigator.share({ title: wine.wine_name, text });
-    } else {
+    if (navigator.share) await navigator.share({ title: wine.wine_name, text });
+    else {
       await navigator.clipboard.writeText(text);
       alert('✅ Copied to clipboard!');
     }
@@ -59,33 +58,23 @@ export default function Recommendations() {
       });
       const data = await res.json();
       setResult(data);
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) { console.error(err); }
     setLoading(false);
   };
 
   const cardVariants = {
     hidden: { opacity: 0, y: 40 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { type: 'spring', stiffness: 100, damping: 15, delay: i * 0.08 }
-    })
+    visible: (i: number) => ({ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 15, delay: i * 0.08 } })
   };
 
   return (
-    <div className={`min-h-screen pb-12 ${darkMode ? 'dark bg-[#1F2521] text-[#F9F5F0]' : 'bg-[#F9F5F0] text-[#1F2521]'}`}>
-      {/* Header + Toggle */}
-      <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#EDE8E0] dark:border-[#4A2C1F]">
+    <div className={`min-h-screen pb-12 ${darkMode ? 'dark bg-black text-[#E7E9EA]' : 'bg-white text-[#0F1419]'}`}>
+      <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#CFD9DE] dark:border-[#2F3336]">
         <div className="flex items-center gap-3">
-          <Wine className="w-8 h-8 text-[#C36A4F]" />
+          <Wine className="w-8 h-8 text-[#1D9BF0]" />
           <h1 className="text-4xl font-bold tracking-tighter">SIP SAGE AI</h1>
         </div>
-        <button 
-          onClick={toggleDarkMode} 
-          className="p-3 rounded-2xl bg-white dark:bg-[#4A2C1F] border border-[#EDE8E0] dark:border-[#E89F6F] hover:scale-110 transition-all"
-        >
+        <button onClick={toggleDarkMode} className="p-3 rounded-2xl bg-white dark:bg-[#2F3336] border border-[#CFD9DE] dark:border-[#2F3336] hover:scale-110 transition-all">
           {darkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
         </button>
       </div>
@@ -96,18 +85,14 @@ export default function Recommendations() {
             value={preferences}
             onChange={(e) => setPreferences(e.target.value)}
             placeholder="Tell me what you're craving today..."
-            className="w-full h-32 p-6 rounded-3xl border border-[#EDE8E0] dark:border-[#4A2C1F] bg-white dark:bg-[#4A2C1F] text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#C36A4F]"
+            className="w-full h-32 p-6 rounded-3xl border border-[#CFD9DE] dark:border-[#2F3336] bg-white dark:bg-[#16181C] text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#1D9BF0]"
           />
           <button
             type="submit"
             disabled={loading}
-            className="mt-4 w-full py-7 rounded-3xl bg-[#C36A4F] hover:bg-[#B05A44] text-white text-2xl font-medium flex items-center justify-center gap-3 transition-all"
+            className="mt-4 w-full py-7 rounded-3xl bg-[#1D9BF0] hover:bg-[#1A8CD8] text-white text-2xl font-medium flex items-center justify-center gap-3 transition-all"
           >
-            {loading ? (
-              <>Thinking <Sparkles className="animate-spin" /></>
-            ) : (
-              <>Get Recommendations <Sparkles /></>
-            )}
+            {loading ? <>Thinking <Sparkles className="animate-spin" /></> : <>Get Recommendations <Sparkles /></>}
           </button>
         </form>
 
@@ -115,7 +100,7 @@ export default function Recommendations() {
           <div className="mt-12">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-3xl font-light">Your Recommendations</h2>
-              <button onClick={() => setResult(null)} className="text-[#C36A4F] flex items-center gap-2">
+              <button onClick={() => setResult(null)} className="text-[#1D9BF0] flex items-center gap-2">
                 <RefreshCw size={20} /> New Search
               </button>
             </div>
@@ -130,38 +115,26 @@ export default function Recommendations() {
                   variants={cardVariants}
                   whileHover={{ y: -8 }}
                   whileTap={{ scale: 0.98 }}
-                  className="wine-card bg-white dark:bg-[#4A2C1F] rounded-3xl shadow-md border border-[#EDE8E0] dark:border-[#E89F6F] overflow-hidden p-8"
+                  className="wine-card bg-white dark:bg-[#16181C] rounded-3xl shadow-md border border-[#CFD9DE] dark:border-[#2F3336] overflow-hidden p-8"
                 >
                   <h3 className="text-4xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h3>
                   <p className="mt-6 text-lg leading-relaxed opacity-90">{wine.tasting_note}</p>
-                  <p className="mt-4 text-[#C36A4F] font-medium">{wine.why_it_matches}</p>
+                  <p className="mt-4 text-[#1D9BF0] font-medium">{wine.why_it_matches}</p>
 
                   <div className="mt-12 grid grid-cols-2 gap-8">
                     <div>
                       <div className="text-xs uppercase tracking-widest opacity-60">BOTTLE</div>
-                      <div className="text-6xl font-bold text-[#1F2521] dark:text-[#F9F5F0]">${wine.price_bottle}</div>
+                      <div className="text-6xl font-bold">${wine.price_bottle}</div>
                     </div>
                     <div>
                       <div className="text-xs uppercase tracking-widest opacity-60">BY THE GLASS</div>
-                      <div className="text-6xl font-bold text-[#1F2521] dark:text-[#F9F5F0]">${wine.price_glass}</div>
+                      <div className="text-6xl font-bold">${wine.price_glass}</div>
                     </div>
                   </div>
 
                   <div className="flex justify-end gap-6 mt-8">
-                    <motion.button
-                      onClick={() => toggleFavorite(wine)}
-                      whileHover={{ scale: 1.15 }}
-                      whileTap={{ scale: 0.85 }}
-                      className="text-4xl"
-                    >
-                      ❤️
-                    </motion.button>
-                    <motion.button
-                      onClick={() => shareIndividual(wine)}
-                      whileHover={{ scale: 1.15 }}
-                      whileTap={{ scale: 0.85 }}
-                      className="text-[#1F2521] dark:text-[#F9F5F0]"
-                    >
+                    <motion.button onClick={() => toggleFavorite(wine)} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.85 }} className="text-4xl">❤️</motion.button>
+                    <motion.button onClick={() => shareIndividual(wine)} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.85 }} className="text-[#0F1419] dark:text-[#E7E9EA]">
                       <Share2 size={32} />
                     </motion.button>
                   </div>
@@ -179,14 +152,9 @@ export default function Recommendations() {
             </button>
             <AnimatePresence>
               {favoritesOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  className="mt-6 space-y-8"
-                >
+                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="mt-6 space-y-8">
                   {favorites.map((wine, i) => (
-                    <motion.div key={i} className="flex justify-between items-start bg-white dark:bg-[#4A2C1F] p-6 rounded-3xl">
+                    <motion.div key={i} className="flex justify-between items-start bg-white dark:bg-[#16181C] p-6 rounded-3xl border border-[#CFD9DE] dark:border-[#2F3336]">
                       <div>
                         <h4 className="text-2xl font-semibold">{wine.wine_name} {wine.vintage}</h4>
                         <p className="text-sm opacity-70">{wine.why_it_matches}</p>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Wine, Sparkles, RefreshCw, Heart, Share2, ChevronDown } from 'lucide-react';
 
 export default function Recommendations() {
@@ -155,19 +155,19 @@ export default function Recommendations() {
                           <p className="text-[#1A3C35] mt-3 line-clamp-2">{wine.tasting_note}</p>
                         </div>
 
-                        <div className="flex items-center gap-5">
-                          {/* Modern X.com-style Heart */}
+                        <div className="flex items-center gap-6">
+                          {/* Seamless modern heart */}
                           <button
                             onClick={() => toggleFavorite(wine)}
-                            className="text-3xl transition-all hover:scale-110 active:scale-95"
+                            className="text-3xl transition-all hover:scale-110 active:scale-95 text-red-500"
                           >
                             ❤️
                           </button>
 
-                          {/* Modern X.com-style Share */}
+                          {/* Seamless modern share */}
                           <button
                             onClick={() => shareIndividual(wine)}
-                            className="text-[#1F2521] hover:text-[#1A3C35] transition-colors"
+                            className="text-[#1F2521] hover:text-[#1A3C35] transition-all hover:scale-110 active:scale-95"
                           >
                             <Share2 size={26} />
                           </button>
@@ -215,7 +215,7 @@ export default function Recommendations() {
                     </h3>
                     <button
                       onClick={(e) => { e.stopPropagation(); toggleFavorite(wine); }}
-                      className="text-3xl transition-all hover:scale-110 active:scale-95"
+                      className="text-3xl transition-all hover:scale-110 active:scale-95 text-red-500"
                     >
                       {favorites.some(f => f.wine_name === wine.wine_name) ? '❤️' : '♡'}
                     </button>

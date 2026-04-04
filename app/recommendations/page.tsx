@@ -1,14 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Wine, Sparkles, RefreshCw, Heart, Share2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Wine, Sparkles, RefreshCw, Heart, Share2, ChevronDown } from 'lucide-react';
 
 export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [favorites, setFavorites] = useState<any[]>([]);
+  const [favoritesOpen, setFavoritesOpen] = useState(false);
   const [toast, setToast] = useState('');
 
   useEffect(() => {
@@ -27,6 +28,22 @@ export default function Recommendations() {
       saveFavorites(favorites.filter(f => f.wine_name !== wine.wine_name));
     } else {
       saveFavorites([...favorites, wine]);
+    }
+  };
+
+  const shareIndividual = async (wine: any) => {
+    const text = `🍷 My SIP SAGE AI Favorite:\n${wine.wine_name} ${wine.vintage}\n${wine.tasting_note}\n\nBottle $${wine.price_bottle} | Glass $${wine.price_glass}\n\n#SipSageAI #OregonWine`;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'My Wine Favorite', text });
+      } else {
+        await navigator.clipboard.writeText(text);
+        setToast('✅ Copied to clipboard!');
+        setTimeout(() => setToast(''), 2500);
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -54,34 +71,6 @@ export default function Recommendations() {
     setResult(null);
   };
 
-  const shareFavorites = async () => {
-    if (favorites.length === 0) return;
-
-    const lines = favorites.map(w => 
-      `🍷 ${w.wine_name} ${w.vintage} — Bottle $${w.price_bottle}`
-    );
-
-    const shareText = `My SIP SAGE AI Favorites from the tasting room:\n\n${lines.join('\n')}\n\n#SipSageAI #WillametteValley #OregonWine`;
-
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: 'My SIP SAGE AI Favorites',
-          text: shareText,
-        });
-        return;
-      }
-
-      await navigator.clipboard.writeText(shareText);
-      setToast('✅ Copied to clipboard – ready for Instagram or Messages!');
-      setTimeout(() => setToast(''), 3000);
-    } catch (err) {
-      console.error(err);
-      setToast('Could not share. Try copying manually.');
-      setTimeout(() => setToast(''), 3000);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#F8F9F7] font-sans pb-20">
       <div className="pt-10 pb-8 text-center border-b border-[#EDE8E0]">
@@ -91,7 +80,7 @@ export default function Recommendations() {
       </div>
 
       <div className="max-w-3xl mx-auto px-6 pt-8">
-        {/* Prompt */}
+        {/* Prompt Area */}
         <div className="bg-white rounded-3xl shadow-sm border border-[#EDE8E0] p-8 mb-12">
           <h2 className="text-2xl font-medium text-[#1F2521] mb-6 text-center">
             What kind of wine are you craving today?
@@ -126,48 +115,69 @@ export default function Recommendations() {
           </form>
         </div>
 
-        {/* Favorites Section */}
+        {/* Favorites Section - Collapsible */}
         {favorites.length > 0 && (
           <div className="mb-16">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <Heart className="text-red-500" size={24} fill="currentColor" />
+            <button
+              onClick={() => setFavoritesOpen(!favoritesOpen)}
+              className="w-full flex items-center justify-between bg-white rounded-3xl shadow-sm border border-[#EDE8E0] px-8 py-6 text-left"
+            >
+              <div className="flex items-center gap-3">
+                <Heart className="text-red-500" size={26} fill="currentColor" />
                 <h3 className="text-2xl font-medium text-[#1F2521]">Your Favorites</h3>
+                <span className="text-sm text-[#8A9E8E] bg-[#F8F9F7] px-3 py-1 rounded-2xl">{favorites.length}</span>
               </div>
-              <button
-                onClick={shareFavorites}
-                className="flex items-center gap-2 px-6 py-3 bg-white border border-[#1A3C35] text-[#1A3C35] rounded-3xl text-sm font-medium hover:bg-[#1A3C35] hover:text-white transition-all"
+              <motion.div
+                animate={{ rotate: favoritesOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
               >
-                <Share2 size={18} />
-                Share to Social
-              </button>
-            </div>
+                <ChevronDown size={24} />
+              </motion.div>
+            </button>
 
-            <div className="space-y-8">
-              {favorites.map((wine, i) => (
+            <AnimatePresence>
+              {favoritesOpen && (
                 <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-white rounded-3xl shadow-sm border border-[#EDE8E0] p-8"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="space-y-6 mt-6 overflow-hidden"
                 >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h4 className="text-3xl font-serif font-semibold text-[#1F2521]">
-                        {wine.wine_name} <span className="text-2xl text-[#8A9E8E]">{wine.vintage}</span>
-                      </h4>
-                      <p className="text-[#1A3C35] mt-3 line-clamp-2">{wine.tasting_note}</p>
-                    </div>
-                    <button
-                      onClick={() => toggleFavorite(wine)}
-                      className="text-3xl text-red-500 hover:text-red-600 transition-colors"
+                  {favorites.map((wine, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-white rounded-3xl shadow-sm border border-[#EDE8E0] p-8"
                     >
-                      ❤️
-                    </button>
-                  </div>
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <h4 className="text-3xl font-serif font-semibold text-[#1F2521]">
+                            {wine.wine_name} <span className="text-2xl text-[#8A9E8E]">{wine.vintage}</span>
+                          </h4>
+                          <p className="text-[#1A3C35] mt-3 line-clamp-2">{wine.tasting_note}</p>
+                        </div>
+
+                        <div className="flex gap-4">
+                          <button
+                            onClick={() => toggleFavorite(wine)}
+                            className="text-3xl text-red-500 hover:text-red-600 transition-colors"
+                          >
+                            ❤️
+                          </button>
+                          <button
+                            onClick={() => shareIndividual(wine)}
+                            className="text-[#1A3C35] hover:text-[#132B28] transition-colors"
+                          >
+                            <Share2 size={26} />
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
                 </motion.div>
-              ))}
-            </div>
+              )}
+            </AnimatePresence>
           </div>
         )}
 

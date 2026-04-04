@@ -23,7 +23,7 @@ export default function Home() {
   };
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'dark bg-black text-[#E7E9EA]' : 'bg-white text-[#0F1419]'}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark bg-black text-[#E7E9EA]' : 'bg-white text-[#0F1419]'}`}>
       <button
         onClick={toggleDarkMode}
         className="absolute top-6 right-6 z-50 p-4 rounded-2xl bg-white dark:bg-[#2F3336] border border-[#CFD9DE] dark:border-[#2F3336] shadow-lg hover:scale-110 transition-all"
@@ -58,9 +58,14 @@ export default function Home() {
               </motion.button>
             </Link>
 
-            <button className="w-full py-8 text-3xl font-medium rounded-3xl border-2 border-[#CFD9DE] dark:border-[#2F3336] text-[#0F1419] dark:text-[#E7E9EA] hover:bg-[#F7F9F9] dark:hover:bg-[#2F3336] transition-all">
-              Continue as Guest
-            </button>
+            <div className="grid grid-cols-2 gap-4">
+              <button className="py-8 text-3xl font-medium rounded-3xl border-2 border-[#CFD9DE] dark:border-[#2F3336] text-[#0F1419] dark:text-[#E7E9EA] hover:bg-[#F7F9F9] dark:hover:bg-[#2F3336] transition-all">
+                Log In
+              </button>
+              <button className="py-8 text-3xl font-medium rounded-3xl border-2 border-[#CFD9DE] dark:border-[#2F3336] text-[#0F1419] dark:text-[#E7E9EA] hover:bg-[#F7F9F9] dark:hover:bg-[#2F3336] transition-all">
+                Sign Up
+              </button>
+            </div>
           </div>
         </motion.div>
       </div>

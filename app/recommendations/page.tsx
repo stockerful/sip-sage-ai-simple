@@ -68,13 +68,17 @@ export default function Recommendations() {
   };
 
   return (
-    <div className={`min-h-screen pb-12 ${darkMode ? 'dark bg-black text-[#E7E9EA]' : 'bg-white text-[#0F1419]'}`}>
-      <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-[#CFD9DE] dark:border-[#2F3336]">
+    <div className={`min-h-screen pb-12 transition-colors duration-300 ${darkMode ? 'dark bg-black text-[#E7E9EA]' : 'bg-white text-[#0F1419]'}`}>
+      {/* Centered Header */}
+      <div className="flex items-center justify-center pt-6 pb-4 border-b border-[#CFD9DE] dark:border-[#2F3336] relative">
         <div className="flex items-center gap-3">
           <Wine className="w-8 h-8 text-[#1D9BF0]" />
           <h1 className="text-4xl font-bold tracking-tighter">SIP SAGE AI</h1>
         </div>
-        <button onClick={toggleDarkMode} className="p-3 rounded-2xl bg-white dark:bg-[#2F3336] border border-[#CFD9DE] dark:border-[#2F3336] hover:scale-110 transition-all">
+        <button 
+          onClick={toggleDarkMode} 
+          className="absolute right-6 p-3 rounded-2xl bg-white dark:bg-[#2F3336] border border-[#CFD9DE] dark:border-[#2F3336] hover:scale-110 transition-all"
+        >
           {darkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
         </button>
       </div>
@@ -85,7 +89,7 @@ export default function Recommendations() {
             value={preferences}
             onChange={(e) => setPreferences(e.target.value)}
             placeholder="Tell me what you're craving today..."
-            className="w-full h-32 p-6 rounded-3xl border border-[#CFD9DE] dark:border-[#2F3336] bg-white dark:bg-[#16181C] text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#1D9BF0]"
+            className="w-full h-32 p-6 rounded-3xl border border-[#CFD9DE] dark:border-[#2F3336] bg-white dark:bg-[#16181C] text-[#0F1419] dark:text-[#E7E9EA] text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#1D9BF0] transition-colors duration-300"
           />
           <button
             type="submit"
@@ -96,6 +100,7 @@ export default function Recommendations() {
           </button>
         </form>
 
+        {/* Rest of the page (results + favorites) stays exactly the same as before */}
         {result && (
           <div className="mt-12">
             <div className="flex justify-between items-center mb-8">
@@ -115,7 +120,7 @@ export default function Recommendations() {
                   variants={cardVariants}
                   whileHover={{ y: -8 }}
                   whileTap={{ scale: 0.98 }}
-                  className="wine-card bg-white dark:bg-[#16181C] rounded-3xl shadow-md border border-[#CFD9DE] dark:border-[#2F3336] overflow-hidden p-8"
+                  className="wine-card bg-white dark:bg-[#16181C] rounded-3xl shadow-md border border-[#CFD9DE] dark:border-[#2F3336] overflow-hidden p-8 transition-colors duration-300"
                 >
                   <h3 className="text-4xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h3>
                   <p className="mt-6 text-lg leading-relaxed opacity-90">{wine.tasting_note}</p>

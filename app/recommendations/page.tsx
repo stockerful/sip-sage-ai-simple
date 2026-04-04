@@ -33,16 +33,16 @@ export default function Recommendations() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F0] font-sans pb-12">
-      {/* Clean centered header */}
-      <div className="pt-8 pb-6 text-center border-b border-[#E8E2D5]">
-        <h1 className="text-5xl font-serif tracking-tighter text-[#2C2C2C]">
+    <div className="min-h-screen bg-[#FAF7F0] font-sans pb-20">
+      {/* iOS-style centered header */}
+      <div className="pt-10 pb-8 text-center border-b border-[#E8E2D5]">
+        <h1 className="text-5xl font-serif tracking-[-1px] text-[#2C2C2C]">
           SIP SAGE AI
         </h1>
       </div>
 
       <div className="max-w-3xl mx-auto px-6 pt-8">
-        {/* Prompt Area - more app-like */}
+        {/* Prompt card - native iOS input style */}
         <div className="bg-white rounded-3xl shadow-sm border border-[#D4C9B8] p-8 mb-12">
           <h2 className="text-2xl font-medium text-[#2C2C2C] mb-6 text-center">
             What kind of wine are you craving today?
@@ -53,35 +53,35 @@ export default function Recommendations() {
               value={preferences}
               onChange={(e) => setPreferences(e.target.value)}
               placeholder="Bright fruit-forward Pinot Noir... Earthy reds... Crisp Chardonnay..."
-              className="w-full h-36 px-6 py-5 text-xl border border-[#D4C9B8] rounded-3xl focus:outline-none focus:border-[#4A0F1F] resize-none leading-relaxed"
+              className="w-full h-40 px-6 py-6 text-xl border border-[#D4C9B8] rounded-3xl focus:outline-none focus:border-[#4A0F1F] resize-none leading-relaxed"
               disabled={loading}
             />
             
             <button
               type="submit"
               disabled={loading || !preferences.trim()}
-              className="mt-6 w-full bg-[#4A0F1F] hover:bg-[#3A0C18] active:scale-[0.97] disabled:bg-gray-300 text-white text-2xl font-medium py-7 rounded-3xl transition-all flex items-center justify-center gap-3 shadow-md"
+              className="mt-8 w-full bg-[#4A0F1F] hover:bg-[#3A0C18] active:scale-[0.97] disabled:bg-gray-300 text-white text-2xl font-medium py-7 rounded-3xl transition-all flex items-center justify-center gap-3 shadow-lg"
             >
               {loading ? (
                 <>
                   <Sparkles className="animate-spin" size={28} />
-                  Finding perfect matches...
+                  Thinking...
                 </>
               ) : (
                 <>
                   <Wine size={28} />
-                  Get Recommendations
+                  Get My Recommendations
                 </>
               )}
             </button>
           </form>
         </div>
 
-        {/* Results - addictive card flow */}
+        {/* Results – addictive iOS-style card flow */}
         {result && (
           <div className="space-y-16">
-            <div className="text-center">
-              <p className="text-[#6F7F5F] text-lg max-w-md mx-auto">
+            <div className="text-center px-4">
+              <p className="text-[#6F7F5F] text-lg leading-relaxed">
                 {result.explanation || "Here are your personalized recommendations from the Willamette Valley."}
               </p>
             </div>
@@ -92,19 +92,17 @@ export default function Recommendations() {
                   key={index}
                   className="wine-card bg-white rounded-3xl shadow-md border border-[#D4C9B8] overflow-hidden p-8 active:scale-[1.02] transition-all"
                 >
-                  {/* Strong visible divider */}
+                  {/* Strong, elegant iOS-style divider */}
                   {index > 0 && (
-                    <div className="h-1 bg-[#8C6F5C] w-20 mx-auto mb-10 rounded-full"></div>
+                    <div className="h-px bg-gradient-to-r from-transparent via-[#8C6F5C] to-transparent mb-10"></div>
                   )}
 
-                  <div>
-                    <h3 className="text-4xl font-serif font-semibold text-[#2C2C2C] leading-none mb-1">
-                      {wine.wine_name}
-                    </h3>
-                    <span className="text-3xl text-[#6F7F5F]">{wine.vintage}</span>
-                  </div>
+                  <h3 className="text-4xl font-serif font-semibold text-[#2C2C2C] leading-none mb-1">
+                    {wine.wine_name}
+                  </h3>
+                  <span className="text-3xl text-[#6F7F5F] block mb-8">{wine.vintage}</span>
 
-                  <p className="text-[#4A0F1F] text-xl leading-relaxed my-8">
+                  <p className="text-[#4A0F1F] text-xl leading-relaxed mb-8">
                     {wine.tasting_note}
                   </p>
 
@@ -129,13 +127,13 @@ export default function Recommendations() {
               ))}
             </div>
 
-            {/* New Recommendation button - always visible after results */}
+            {/* Persistent “New Recommendation” button – feels very native */}
             <button
               onClick={clearAll}
-              className="w-full flex items-center justify-center gap-3 py-5 text-[#4A0F1F] font-medium text-xl border border-[#D4C9B8] rounded-3xl hover:bg-white active:scale-95 transition-all"
+              className="w-full flex items-center justify-center gap-3 py-6 text-[#4A0F1F] font-medium text-xl border-2 border-[#D4C9B8] rounded-3xl hover:bg-white active:scale-95 transition-all mx-auto max-w-xs"
             >
-              <RefreshCw size={22} />
-              Try Another Recommendation
+              <RefreshCw size={24} />
+              New Recommendation
             </button>
           </div>
         )}

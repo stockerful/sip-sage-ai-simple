@@ -1,13 +1,36 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wine, Sparkles, RefreshCw } from 'lucide-react';
+import { Wine, Sparkles, RefreshCw, Heart, History } from 'lucide-react';
 
 export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [favorites, setFavorites] = useState<any[]>([]);
+  const [history, setHistory] = useState<any[]>([]);
+
+  // Load favorites from localStorage
+  useEffect(() => {
+    const savedFavorites = localStorage.getItem('sipSageFavorites');
+    if (savedFavorites) setFavorites(JSON.parse(savedFavorites));
+  }, []);
+
+  // Save favorites to localStorage
+  const saveFavorites = (newFavorites: any[]) => {
+    setFavorites(newFavorites);
+    localStorage.setItem('sipSageFavorites', JSON.stringify(newFavorites));
+  };
+
+  const toggleFavorite = (wine: any) => {
+    const isFavorited = favorites.some(f => f.wine_name === wine.wine_name);
+    if (isFavorited) {
+      saveFavorites(favorites.filter(f => f.wine_name !== wine.wine_name));
+    } else {
+      saveFavorites([...favorites, wine]);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +45,9 @@ export default function Recommendations() {
       });
       const data = await res.json();
       setResult(data);
+
+      // Add to history
+      setHistory(prev => [data, ...prev].slice(0, 6));
     } catch (err) {
       console.error(err);
     }
@@ -34,21 +60,11 @@ export default function Recommendations() {
   };
 
   const cardVariants = {
-    hidden: { 
-      opacity: 0, 
-      y: 60,
-      scale: 0.95 
-    },
+    hidden: { opacity: 0, y: 40 },
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 80,
-        damping: 18,
-        delay: i * 0.07
-      }
+      transition: { type: "spring", stiffness: 100, damping: 15, delay: i * 0.08 }
     })
   };
 
@@ -61,6 +77,7 @@ export default function Recommendations() {
       </div>
 
       <div className="max-w-3xl mx-auto px-6 pt-8">
+        {/* Prompt */}
         <div className="bg-white rounded-3xl shadow-sm border border-[#EDE8E0] p-8 mb-12">
           <h2 className="text-2xl font-medium text-[#1F2521] mb-6 text-center">
             What kind of wine are you craving today?
@@ -95,6 +112,43 @@ export default function Recommendations() {
           </form>
         </div>
 
+        {/* Favorites Section */}
+        {favorites.length > 0 && (
+          <div className="mb-16">
+            <div className="flex items-center gap-2 mb-6">
+              <Heart className="text-red-500" size={24} fill="currentColor" />
+              <h3 className="text-2xl font-medium text-[#1F2521]">Your Favorites</h3>
+            </div>
+            <div className="space-y-8">
+              {favorites.map((wine, i) => (
+                <motion.div key={i} className="bg-white rounded-3xl shadow-md border border-[#EDE8E0] p-8">
+                  <h4 className="text-3xl font-serif text-[#1F2521]">{wine.wine_name} <span className="text-xl text-[#8A9E8E]">{wine.vintage}</span></h4>
+                  <p className="text-[#1A3C35] mt-3">{wine.tasting_note}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* History Section */}
+        {history.length > 0 && (
+          <div className="mb-16">
+            <div className="flex items-center gap-2 mb-6">
+              <History size={24} />
+              <h3 className="text-2xl font-medium text-[#1F2521]">Recent Recommendations</h3>
+            </div>
+            <div className="space-y-8">
+              {history.map((pastResult, i) => (
+                <div key={i} className="opacity-75">
+                  <p className="text-[#8A9E8E] text-sm mb-2">Previous search</p>
+                  <p className="text-[#1F2521]">{pastResult.explanation}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Current Results */}
         {result && (
           <div className="space-y-16">
             <div className="text-center px-4">
@@ -109,20 +163,27 @@ export default function Recommendations() {
                   key={index}
                   custom={index}
                   initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: "-50px" }}
+                  animate="visible"
                   variants={cardVariants}
-                  whileHover={{ y: -12, scale: 1.02, transition: { duration: 0.2 } }}
-                  whileTap={{ scale: 0.97 }}
-                  className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8 cursor-pointer"
+                  whileHover={{ y: -8 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8"
                 >
                   {index > 0 && (
                     <div className="h-px bg-gradient-to-r from-transparent via-[#C36A4F] to-transparent mb-10"></div>
                   )}
 
-                  <h3 className="text-4xl font-serif font-semibold text-[#1F2521] leading-none mb-8">
-                    {wine.wine_name} <span className="text-4xl">{wine.vintage}</span>
-                  </h3>
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-4xl font-serif font-semibold text-[#1F2521] leading-none mb-8">
+                      {wine.wine_name} <span className="text-4xl">{wine.vintage}</span>
+                    </h3>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); toggleFavorite(wine); }}
+                      className="text-3xl text-red-400 hover:text-red-500 transition-colors"
+                    >
+                      {favorites.some(f => f.wine_name === wine.wine_name) ? '❤️' : '♡'}
+                    </button>
+                  </div>
 
                   <p className="text-[#1A3C35] text-xl leading-relaxed mb-8">
                     {wine.tasting_note}

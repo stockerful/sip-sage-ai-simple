@@ -87,25 +87,53 @@ export default function Recommendations() {
         </div>
       </div>
 
-      {/* Favorites at top */}
+      {/* Your Favorites - Now perfectly integrated at the top */}
       {favorites.length > 0 && (
-        <div className="max-w-2xl mx-auto px-6 mt-8">
-          <button onClick={() => setFavoritesOpen(!favoritesOpen)} className="flex items-center gap-3 text-xl font-medium">
-            ❤️ Your Favorites
-            <ChevronDown className={`transition-transform ${favoritesOpen ? 'rotate-180' : ''}`} />
-          </button>
+        <div className="max-w-2xl mx-auto px-6 mt-10">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-px flex-1 bg-[#EDE8E0]"></div>
+            <button 
+              onClick={() => setFavoritesOpen(!favoritesOpen)} 
+              className="flex items-center gap-3 text-xl font-medium text-[#1F2521] hover:text-[#9C2C2C] transition-colors"
+            >
+              ❤️ Your Favorites
+              <ChevronDown className={`transition-transform ${favoritesOpen ? 'rotate-180' : ''}`} />
+            </button>
+            <div className="h-px flex-1 bg-[#EDE8E0]"></div>
+          </div>
+
           <AnimatePresence>
             {favoritesOpen && (
-              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="mt-6 space-y-8">
+              <motion.div 
+                initial={{ height: 0, opacity: 0 }} 
+                animate={{ height: 'auto', opacity: 1 }} 
+                exit={{ height: 0, opacity: 0 }}
+                className="space-y-8"
+              >
                 {favorites.map((wine, i) => (
-                  <motion.div key={i} className="flex justify-between items-start bg-white p-6 rounded-3xl border border-[#EDE8E0]">
-                    <div>
-                      <h4 className="text-2xl font-semibold">{wine.wine_name} {wine.vintage}</h4>
-                      <p className="text-sm opacity-70">{wine.why_it_matches}</p>
-                    </div>
-                    <div className="flex gap-4">
-                      <button onClick={() => toggleFavorite(wine)} className="text-3xl">🗑️</button>
-                      <button onClick={() => shareIndividual(wine)}><Share2 size={28} /></button>
+                  <motion.div 
+                    key={i} 
+                    className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8"
+                  >
+                    <h4 className="text-2xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h4>
+                    <p className="mt-4 text-sm opacity-70">{wine.why_it_matches}</p>
+                    <div className="flex justify-end gap-6 mt-8">
+                      <motion.button 
+                        onClick={() => toggleFavorite(wine)} 
+                        whileHover={{ scale: 1.2 }} 
+                        whileTap={{ scale: 0.9 }} 
+                        className="transition-all"
+                      >
+                        <Heart className={`w-9 h-9 ${true ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#9C2C2C]'}`} strokeWidth={2} />
+                      </motion.button>
+                      <motion.button 
+                        onClick={() => shareIndividual(wine)} 
+                        whileHover={{ scale: 1.15 }} 
+                        whileTap={{ scale: 0.85 }} 
+                        className="text-[#1F2521]"
+                      >
+                        <Share2 size={32} />
+                      </motion.button>
                     </div>
                   </motion.div>
                 ))}
@@ -162,7 +190,6 @@ export default function Recommendations() {
                     <p className="mt-6 text-lg leading-relaxed opacity-90">{wine.tasting_note}</p>
                     <p className="mt-4 text-[#9C2C2C] font-medium">{wine.why_it_matches}</p>
 
-                    {/* Pricing - very close gap as requested */}
                     <div className="mt-12 space-y-8">
                       <div className="flex items-baseline gap-5">
                         <div className="text-xs uppercase tracking-widest opacity-60 w-28">BY THE GLASS</div>
@@ -174,7 +201,6 @@ export default function Recommendations() {
                       </div>
                     </div>
 
-                    {/* Average Guest Rating */}
                     <div className="mt-8 flex items-center gap-3">
                       <span className="text-sm uppercase tracking-widest opacity-60">Guest Average</span>
                       <div className="flex gap-1">
@@ -187,7 +213,6 @@ export default function Recommendations() {
                       </span>
                     </div>
 
-                    {/* Your Rating */}
                     <div className="mt-6 flex items-center gap-3">
                       <span className="text-sm uppercase tracking-widest opacity-60">Your Rating</span>
                       <div className="flex gap-1">
@@ -200,7 +225,6 @@ export default function Recommendations() {
                       {userRating > 0 && <span className="ml-2 text-sm font-medium text-[#9C2C2C]">{userRating}/5</span>}
                     </div>
 
-                    {/* Heart + Share with proper filled animation */}
                     <div className="flex justify-end gap-6 mt-8">
                       <motion.button
                         onClick={() => toggleFavorite(wine)}

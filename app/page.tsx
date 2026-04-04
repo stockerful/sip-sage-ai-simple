@@ -15,7 +15,7 @@ export default function Home() {
           className="text-center"
         >
           <div className="flex items-center justify-center gap-3 mb-8">
-            <Wine className="w-14 h-14 text-[#C36A4F]" />
+            <Wine className="w-14 h-14 text-[#9C2C2C]" />
             <h1 className="text-7xl font-bold tracking-tighter">SIP SAGE AI</h1>
           </div>
 
@@ -28,7 +28,7 @@ export default function Home() {
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="w-full py-8 text-3xl font-medium rounded-3xl bg-[#C36A4F] hover:bg-[#B05A44] text-white shadow-2xl transition-all"
+                className="w-full py-8 text-3xl font-medium rounded-3xl bg-[#9C2C2C] hover:bg-[#8B2525] text-white shadow-2xl transition-all"
               >
                 Start Tasting
               </motion.button>

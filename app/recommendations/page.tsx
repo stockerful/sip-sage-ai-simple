@@ -59,7 +59,7 @@ export default function Recommendations() {
       {/* Centered Header */}
       <div className="flex items-center justify-center pt-6 pb-4 border-b border-[#EDE8E0]">
         <div className="flex items-center gap-3">
-          <Wine className="w-8 h-8 text-[#C36A4F]" />
+          <Wine className="w-8 h-8 text-[#9C2C2C]" />
           <h1 className="text-4xl font-bold tracking-tighter">SIP SAGE AI</h1>
         </div>
       </div>
@@ -70,12 +70,12 @@ export default function Recommendations() {
             value={preferences}
             onChange={(e) => setPreferences(e.target.value)}
             placeholder="Tell me what you're craving today..."
-            className="w-full h-32 p-6 rounded-3xl border border-[#EDE8E0] bg-white text-[#1F2521] text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#C36A4F]"
+            className="w-full h-32 p-6 rounded-3xl border border-[#EDE8E0] bg-white text-[#1F2521] text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#9C2C2C]"
           />
           <button
             type="submit"
             disabled={loading}
-            className="mt-4 w-full py-7 rounded-3xl bg-[#C36A4F] hover:bg-[#B05A44] text-white text-2xl font-medium flex items-center justify-center gap-3 transition-all"
+            className="mt-4 w-full py-7 rounded-3xl bg-[#9C2C2C] hover:bg-[#8B2525] text-white text-2xl font-medium flex items-center justify-center gap-3 transition-all"
           >
             {loading ? <>Thinking <Sparkles className="animate-spin" /></> : <>Get Recommendations <Sparkles /></>}
           </button>
@@ -85,7 +85,7 @@ export default function Recommendations() {
           <div className="mt-12">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-3xl font-light">Your Recommendations</h2>
-              <button onClick={() => setResult(null)} className="text-[#C36A4F] flex items-center gap-2">
+              <button onClick={() => setResult(null)} className="text-[#9C2C2C] flex items-center gap-2">
                 <RefreshCw size={20} /> New Search
               </button>
             </div>
@@ -104,16 +104,17 @@ export default function Recommendations() {
                 >
                   <h3 className="text-4xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h3>
                   <p className="mt-6 text-lg leading-relaxed opacity-90">{wine.tasting_note}</p>
-                  <p className="mt-4 text-[#C36A4F] font-medium">{wine.why_it_matches}</p>
+                  <p className="mt-4 text-[#9C2C2C] font-medium">{wine.why_it_matches}</p>
 
-                  <div className="mt-12 grid grid-cols-2 gap-8">
-                    <div>
-                      <div className="text-xs uppercase tracking-widest opacity-60">BOTTLE</div>
-                      <div className="text-6xl font-bold">${wine.price_bottle}</div>
-                    </div>
+                  {/* Updated Pricing: BY THE GLASS on top of BOTTLE with moderate spacing */}
+                  <div className="mt-12 space-y-10">
                     <div>
                       <div className="text-xs uppercase tracking-widest opacity-60">BY THE GLASS</div>
-                      <div className="text-6xl font-bold">${wine.price_glass}</div>
+                      <div className="text-6xl font-bold text-[#1F2521]">${wine.price_glass}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs uppercase tracking-widest opacity-60">BOTTLE</div>
+                      <div className="text-6xl font-bold text-[#1F2521]">${wine.price_bottle}</div>
                     </div>
                   </div>
 
@@ -129,6 +130,7 @@ export default function Recommendations() {
           </div>
         )}
 
+        {/* Re-added Favorites Tab */}
         {favorites.length > 0 && (
           <div className="mt-16">
             <button onClick={() => setFavoritesOpen(!favoritesOpen)} className="flex items-center gap-3 text-xl font-medium">

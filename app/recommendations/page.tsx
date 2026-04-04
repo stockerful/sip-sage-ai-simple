@@ -17,6 +17,7 @@ export default function Recommendations() {
       'Domaine Drouhin': { rating: 4.7, count: 23 },
       'Eyrie Vineyards': { rating: 4.9, count: 31 },
       'Patricia Green': { rating: 4.4, count: 15 },
+      'Willakenzie Estate': { rating: 4.6, count: 19 },
     };
     return averages[key] || { rating: 4.5, count: 18 };
   };
@@ -72,6 +73,46 @@ export default function Recommendations() {
     setLoading(false);
   };
 
+  // Mock data now returns 4 wines
+  const useMockData = () => {
+    setResult({
+      recommendations: [
+        {
+          wine_name: "Domaine Drouhin Oregon Pinot Noir",
+          vintage: "2023",
+          tasting_note: "Elegant with bright cherry, raspberry, and subtle earth notes. Classic Dundee Hills Pinot.",
+          why_it_matches: "Matches your preference for bright, fruit-forward Pinots with good acidity.",
+          price_glass: 18,
+          price_bottle: 68
+        },
+        {
+          wine_name: "Eyrie Vineyards Original Vines Pinot Noir",
+          vintage: "2022",
+          tasting_note: "Complex with forest floor, red currant, and a silky texture.",
+          why_it_matches: "Perfect for someone who enjoys earthy, old-world style Pinots.",
+          price_glass: 22,
+          price_bottle: 85
+        },
+        {
+          wine_name: "Patricia Green Cellars Reserve Pinot Noir",
+          vintage: "2024",
+          tasting_note: "Bright red fruit with notes of cranberry, rose petal, and fine tannins.",
+          why_it_matches: "Great balance of fruit and structure for your taste.",
+          price_glass: 16,
+          price_bottle: 62
+        },
+        {
+          wine_name: "Bergström Cumberland Reserve Pinot Noir",
+          vintage: "2021",
+          tasting_note: "Earthy complexity with loamy soil, dried herbs, and a touch of smoked meat.",
+          why_it_matches: "Offers deep savory notes that complement your preference.",
+          price_glass: 20,
+          price_bottle: 72
+        }
+      ]
+    });
+  };
+
   const cardVariants = {
     hidden: { opacity: 0, y: 40 },
     visible: (i: number) => ({ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 15, delay: i * 0.08 } })
@@ -79,21 +120,18 @@ export default function Recommendations() {
 
   return (
     <div className="min-h-screen pb-12 bg-[#F9F5F0] text-[#1F2521]">
-      {/* Enhanced Header with decorative line */}
+      {/* Header with tagline */}
       <div className="flex items-center justify-center pt-6 pb-4 border-b border-[#EDE8E0]">
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tighter">SIP SAGE AI</h1>
-          
-          {/* Thin decorative line */}
           <div className="h-px w-48 mx-auto bg-gradient-to-r from-transparent via-[#EDE8E0] to-transparent my-3"></div>
-          
           <p className="text-sm uppercase tracking-[1.5px] text-[#9C2C2C] font-medium">
             Instant Expertise. Effortless Hosting
           </p>
         </div>
       </div>
 
-      {/* Your Favorites - now matches page perfectly and floats */}
+      {/* Favorites at top */}
       {favorites.length > 0 && (
         <div className="max-w-2xl mx-auto px-6 mt-10">
           <div className="flex items-center gap-3 mb-6">
@@ -112,10 +150,7 @@ export default function Recommendations() {
             {favoritesOpen && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="space-y-8">
                 {favorites.map((wine, i) => (
-                  <motion.div 
-                    key={i} 
-                    className="wine-card bg-white rounded-3xl shadow-xl border border-[#EDE8E0] overflow-hidden p-8"
-                  >
+                  <motion.div key={i} className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8">
                     <h4 className="text-2xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h4>
                     <p className="mt-4 text-sm opacity-70">{wine.why_it_matches}</p>
                     <div className="flex justify-end gap-6 mt-8">
@@ -142,13 +177,22 @@ export default function Recommendations() {
             placeholder="Tell me what you're craving today..."
             className="w-full h-32 p-6 rounded-3xl border border-[#EDE8E0] bg-white text-[#1F2521] text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#9C2C2C]"
           />
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-4 w-full py-7 rounded-3xl bg-[#9C2C2C] hover:bg-[#8B2525] text-white text-2xl font-medium flex items-center justify-center gap-3 transition-all"
-          >
-            {loading ? <>Thinking <Sparkles className="animate-spin" /></> : <>Get Recommendations <Sparkles /></>}
-          </button>
+          <div className="flex gap-4 mt-4">
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 py-7 rounded-3xl bg-[#9C2C2C] hover:bg-[#8B2525] text-white text-2xl font-medium flex items-center justify-center gap-3 transition-all"
+            >
+              {loading ? <>Thinking <Sparkles className="animate-spin" /></> : <>Get Recommendations <Sparkles /></>}
+            </button>
+            <button
+              type="button"
+              onClick={useMockData}
+              className="px-8 py-7 rounded-3xl border-2 border-[#9C2C2C] text-[#9C2C2C] hover:bg-[#9C2C2C]/10 text-xl font-medium transition-all"
+            >
+              Mock Data (4 wines)
+            </button>
+          </div>
         </form>
 
         {result && (

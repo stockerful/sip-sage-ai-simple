@@ -34,7 +34,7 @@ export default function Recommendations() {
 
   return (
     <div className="min-h-screen bg-[#FAF7F0] font-sans pb-20">
-      {/* iOS-style centered header */}
+      {/* Clean iOS-style header */}
       <div className="pt-10 pb-8 text-center border-b border-[#E8E2D5]">
         <h1 className="text-5xl font-serif tracking-[-1px] text-[#2C2C2C]">
           SIP SAGE AI
@@ -42,7 +42,7 @@ export default function Recommendations() {
       </div>
 
       <div className="max-w-3xl mx-auto px-6 pt-8">
-        {/* Prompt card - native iOS input style */}
+        {/* Prompt area */}
         <div className="bg-white rounded-3xl shadow-sm border border-[#D4C9B8] p-8 mb-12">
           <h2 className="text-2xl font-medium text-[#2C2C2C] mb-6 text-center">
             What kind of wine are you craving today?
@@ -77,7 +77,7 @@ export default function Recommendations() {
           </form>
         </div>
 
-        {/* Results – addictive iOS-style card flow */}
+        {/* Results with advanced iOS card animations */}
         {result && (
           <div className="space-y-16">
             <div className="text-center px-4">
@@ -90,9 +90,10 @@ export default function Recommendations() {
               {result.recommendations?.map((wine: any, index: number) => (
                 <div
                   key={index}
-                  className="wine-card bg-white rounded-3xl shadow-md border border-[#D4C9B8] overflow-hidden p-8 active:scale-[1.02] transition-all"
+                  className="wine-card group bg-white rounded-3xl shadow-md border border-[#D4C9B8] overflow-hidden p-8 active:scale-[0.98] transition-all duration-300 ease-out hover:shadow-2xl"
+                  style={{ animationDelay: `${index * 80}ms` }}
                 >
-                  {/* Strong, elegant iOS-style divider */}
+                  {/* Strong visible iOS-style divider */}
                   {index > 0 && (
                     <div className="h-px bg-gradient-to-r from-transparent via-[#8C6F5C] to-transparent mb-10"></div>
                   )}
@@ -127,7 +128,6 @@ export default function Recommendations() {
               ))}
             </div>
 
-            {/* Persistent “New Recommendation” button – feels very native */}
             <button
               onClick={clearAll}
               className="w-full flex items-center justify-center gap-3 py-6 text-[#4A0F1F] font-medium text-xl border-2 border-[#D4C9B8] rounded-3xl hover:bg-white active:scale-95 transition-all mx-auto max-w-xs"

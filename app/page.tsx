@@ -8,23 +8,23 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#F9F5F0] text-[#1F2521]">
-      <div className="max-w-2xl mx-auto px-6 pt-24 pb-12">
+      <div className="max-w-2xl mx-auto px-6 pt-20 pb-12">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
           className="text-center"
         >
-          {/* Logo image only - no Wine icon */}
+          {/* Bigger logo - optimized for iPhone */}
           <div className="mb-8">
             <Image
               src="/sip-sage-ai-logo.png"
               alt="SIP SAGE AI"
-              width={320}
-              height={120}
+              width={420}
+              height={160}
               priority
               className="drop-shadow-lg mx-auto"
-              style={{ width: 'auto', height: '120px' }}
+              style={{ width: 'auto', height: '160px' }}
             />
           </div>
 

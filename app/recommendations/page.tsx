@@ -7,25 +7,21 @@ export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<any[]>([]);
   const [favoritesOpen, setFavoritesOpen] = useState(true);
   const [ratings, setRatings] = useState<{[key: string]: number}>({});
 
-  // Simulate average guest ratings
   const getAverageRating = (wine: any) => {
     const key = `${wine.wine_name}-${wine.vintage || ''}`;
     const averages: {[key: string]: {rating: number, count: number}} = {
       'Domaine Drouhin': { rating: 4.7, count: 23 },
       'Eyrie Vineyards': { rating: 4.9, count: 31 },
       'Patricia Green': { rating: 4.4, count: 15 },
-      'Willamette Valley Vineyards': { rating: 4.2, count: 12 },
-      'King Estate': { rating: 4.6, count: 19 },
-      'Elk Cove': { rating: 4.8, count: 27 },
     };
     return averages[key] || { rating: 4.5, count: 18 };
   };
 
-  // Load data
   useEffect(() => {
     const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     const savedRatings = JSON.parse(localStorage.getItem('wineRatings') || '{}');
@@ -64,17 +60,40 @@ export default function Recommendations() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!preferences.trim()) return;
+
     setLoading(true);
+    setError(null);
+    setResult(null);
+
     try {
+      console.log('🔄 Fetching recommendations for:', preferences);
       const res = await fetch('https://sip-sage-ai-backend.onrender.com/api/recommend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ preferences, tenant_id: 'mcminnville-test' }),
       });
+
+      if (!res.ok) throw new Error(`Server error: ${res.status}`);
+
       const data = await res.json();
+      console.log('✅ Received data:', data);
       setResult(data);
-    } catch (err) { console.error(err); }
-    setLoading(false);
+    } catch (err: any) {
+      console.error('❌ Fetch error:', err);
+      setError(err.message || 'Failed to get recommendations. Try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const useMockData = () => {
+    setResult({
+      recommendations: [
+        { wine_name: "Domaine Drouhin Oregon Pinot Noir", vintage: "2023", tasting_note: "Elegant with bright cherry, raspberry, and subtle earth notes.", why_it_matches: "Matches your preference for bright, fruit-forward Pinots.", price_glass: 18, price_bottle: 68 },
+        { wine_name: "Eyrie Vineyards Original Vines Pinot Noir", vintage: "2022", tasting_note: "Complex with forest floor, red currant, and silky texture.", why_it_matches: "Perfect for earthy, old-world style Pinots.", price_glass: 22, price_bottle: 85 },
+      ]
+    });
+    setError(null);
   };
 
   const cardVariants = {
@@ -84,7 +103,6 @@ export default function Recommendations() {
 
   return (
     <div className="min-h-screen pb-12 bg-[#F9F5F0] text-[#1F2521]">
-      {/* Centered Header */}
       <div className="flex items-center justify-center pt-6 pb-4 border-b border-[#EDE8E0]">
         <div className="flex items-center gap-3">
           <Wine className="w-8 h-8 text-[#9C2C2C]" />
@@ -92,7 +110,7 @@ export default function Recommendations() {
         </div>
       </div>
 
-      {/* Your Favorites - NOW AT THE TOP */}
+      {/* Favorites at top */}
       {favorites.length > 0 && (
         <div className="max-w-2xl mx-auto px-6 mt-8">
           <button onClick={() => setFavoritesOpen(!favoritesOpen)} className="flex items-center gap-3 text-xl font-medium">
@@ -102,32 +120,18 @@ export default function Recommendations() {
           <AnimatePresence>
             {favoritesOpen && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="mt-6 space-y-8">
-                {favorites.map((wine, i) => {
-                  const key = getWineKey(wine);
-                  const userRating = ratings[key] || 0;
-                  const avg = getAverageRating(wine);
-                  return (
-                    <motion.div key={i} className="flex justify-between items-start bg-white p-6 rounded-3xl border border-[#EDE8E0]">
-                      <div>
-                        <h4 className="text-2xl font-semibold">{wine.wine_name} {wine.vintage}</h4>
-                        <p className="text-sm opacity-70">{wine.why_it_matches}</p>
-                        <div className="flex items-center gap-2 mt-4 text-sm">
-                          <span className="opacity-60">Guest Average</span>
-                          <div className="flex gap-px">
-                            {[1,2,3,4,5].map(s => (
-                              <Star key={s} className={`w-4 h-4 ${avg.rating >= s ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#EDE8E0]'}`} />
-                            ))}
-                          </div>
-                          <span className="font-medium text-[#9C2C2C]">{avg.rating} ({avg.count})</span>
-                        </div>
-                      </div>
-                      <div className="flex gap-4">
-                        <button onClick={() => toggleFavorite(wine)} className="text-3xl">🗑️</button>
-                        <button onClick={() => shareIndividual(wine)}><Share2 size={28} /></button>
-                      </div>
-                    </motion.div>
-                  );
-                })}
+                {favorites.map((wine, i) => (
+                  <motion.div key={i} className="flex justify-between items-start bg-white p-6 rounded-3xl border border-[#EDE8E0]">
+                    <div>
+                      <h4 className="text-2xl font-semibold">{wine.wine_name} {wine.vintage}</h4>
+                      <p className="text-sm opacity-70">{wine.why_it_matches}</p>
+                    </div>
+                    <div className="flex gap-4">
+                      <button onClick={() => toggleFavorite(wine)} className="text-3xl">🗑️</button>
+                      <button onClick={() => shareIndividual(wine)}><Share2 size={28} /></button>
+                    </div>
+                  </motion.div>
+                ))}
               </motion.div>
             )}
           </AnimatePresence>
@@ -142,30 +146,46 @@ export default function Recommendations() {
             placeholder="Tell me what you're craving today..."
             className="w-full h-32 p-6 rounded-3xl border border-[#EDE8E0] bg-white text-[#1F2521] text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#9C2C2C]"
           />
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-4 w-full py-7 rounded-3xl bg-[#9C2C2C] hover:bg-[#8B2525] text-white text-2xl font-medium flex items-center justify-center gap-3 transition-all"
-          >
-            {loading ? <>Thinking <Sparkles className="animate-spin" /></> : <>Get Recommendations <Sparkles /></>}
-          </button>
+          <div className="flex gap-4 mt-4">
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 py-7 rounded-3xl bg-[#9C2C2C] hover:bg-[#8B2525] text-white text-2xl font-medium flex items-center justify-center gap-3 transition-all"
+            >
+              {loading ? <>Thinking <Sparkles className="animate-spin" /></> : <>Get Recommendations <Sparkles /></>}
+            </button>
+            <button
+              type="button"
+              onClick={useMockData}
+              className="px-8 py-7 rounded-3xl border-2 border-[#9C2C2C] text-[#9C2C2C] hover:bg-[#9C2C2C]/10 text-xl font-medium transition-all"
+            >
+              Mock Data
+            </button>
+          </div>
         </form>
+
+        {error && (
+          <div className="mt-6 p-6 bg-red-50 border border-red-200 rounded-3xl text-red-700">
+            ⚠️ {error}<br />
+            <small className="block mt-2">Check the browser console (F12) for details.</small>
+          </div>
+        )}
 
         {result && (
           <div className="mt-12">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-3xl font-light">Your Recommendations</h2>
-              <button onClick={() => setResult(null)} className="text-[#9C2C2C] flex items-center gap-2">
+              <button onClick={() => { setResult(null); setError(null); }} className="text-[#9C2C2C] flex items-center gap-2">
                 <RefreshCw size={20} /> New Search
               </button>
             </div>
 
             <div className="grid gap-12">
-              {result.recommendations.map((wine: any, index: number) => {
-                const key = getWineKey(wine);
+              {result.recommendations?.map((wine: any, index: number) => {
+                const key = `${wine.wine_name}-${wine.vintage || ''}`;
                 const userRating = ratings[key] || 0;
                 const avg = getAverageRating(wine);
-                const isFavorited = favorites.some((f) => getWineKey(f) === key);
+                const isFavorited = favorites.some((f) => `${f.wine_name}-${f.vintage || ''}` === key);
                 return (
                   <motion.div
                     key={index}
@@ -181,7 +201,6 @@ export default function Recommendations() {
                     <p className="mt-6 text-lg leading-relaxed opacity-90">{wine.tasting_note}</p>
                     <p className="mt-4 text-[#9C2C2C] font-medium">{wine.why_it_matches}</p>
 
-                    {/* Pricing */}
                     <div className="mt-12 space-y-10">
                       <div>
                         <div className="text-xs uppercase tracking-widest opacity-60">BY THE GLASS</div>
@@ -197,11 +216,8 @@ export default function Recommendations() {
                     <div className="mt-8 flex items-center gap-3">
                       <span className="text-sm uppercase tracking-widest opacity-60">Guest Average</span>
                       <div className="flex gap-1">
-                        {[1, 2, 3, 4, 5].map((s) => (
-                          <Star
-                            key={s}
-                            className={`w-6 h-6 ${avg.rating >= s ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#EDE8E0]'}`}
-                          />
+                        {[1,2,3,4,5].map(s => (
+                          <Star key={s} className={`w-6 h-6 ${avg.rating >= s ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#EDE8E0]'}`} />
                         ))}
                       </div>
                       <span className="text-sm font-medium text-[#9C2C2C]">
@@ -213,40 +229,20 @@ export default function Recommendations() {
                     <div className="mt-6 flex items-center gap-3">
                       <span className="text-sm uppercase tracking-widest opacity-60">Your Rating</span>
                       <div className="flex gap-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button
-                            key={star}
-                            onClick={() => rateWine(wine, star)}
-                            className="transition-all hover:scale-110"
-                          >
-                            <Star
-                              className={`w-8 h-8 ${userRating >= star ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#EDE8E0]'}`}
-                            />
+                        {[1,2,3,4,5].map(star => (
+                          <button key={star} onClick={() => rateWine(wine, star)} className="transition-all hover:scale-110">
+                            <Star className={`w-8 h-8 ${userRating >= star ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#EDE8E0]'}`} />
                           </button>
                         ))}
                       </div>
                       {userRating > 0 && <span className="ml-2 text-sm font-medium text-[#9C2C2C]">{userRating}/5</span>}
                     </div>
 
-                    {/* Heart + Share - now with proper empty/filled animation */}
                     <div className="flex justify-end gap-6 mt-8">
-                      <motion.button
-                        onClick={() => toggleFavorite(wine)}
-                        whileHover={{ scale: 1.2 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="transition-all"
-                      >
-                        <Heart
-                          className={`w-9 h-9 ${isFavorited ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#9C2C2C]'}`}
-                          strokeWidth={isFavorited ? 0 : 2}
-                        />
+                      <motion.button onClick={() => toggleFavorite(wine)} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} className="transition-all">
+                        <Heart className={`w-9 h-9 ${isFavorited ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#9C2C2C]'}`} strokeWidth={isFavorited ? 0 : 2} />
                       </motion.button>
-                      <motion.button
-                        onClick={() => shareIndividual(wine)}
-                        whileHover={{ scale: 1.15 }}
-                        whileTap={{ scale: 0.85 }}
-                        className="text-[#1F2521]"
-                      >
+                      <motion.button onClick={() => shareIndividual(wine)} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.85 }} className="text-[#1F2521]">
                         <Share2 size={32} />
                       </motion.button>
                     </div>

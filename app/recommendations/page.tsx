@@ -33,31 +33,20 @@ export default function Recommendations() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F4EB] font-sans">
-      {/* Header */}
-      <div className="bg-white border-b border-[#D4C9B8] shadow-sm">
-        <div className="max-w-3xl mx-auto px-6 py-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#4A0F1F] rounded-2xl flex items-center justify-center text-white text-2xl">🍷</div>
-            <div>
-              <h1 className="text-3xl font-serif tracking-tight text-[#2C2C2C]">SIP SAGE AI</h1>
-              <p className="text-[#6F7F5F] text-sm tracking-widest">Willamette Valley • Oregon</p>
-            </div>
-          </div>
-          <button
-            onClick={clearAll}
-            className="flex items-center gap-2 px-5 py-3 text-[#4A0F1F] hover:bg-[#F8F4EB] rounded-3xl transition-colors font-medium"
-          >
-            <RefreshCw size={20} />
-            New Recommendation
-          </button>
-        </div>
+    <div className="min-h-screen bg-[#FAF7F0] font-sans">
+      {/* Centered Header */}
+      <div className="pt-8 pb-6 text-center">
+        <h1 className="text-5xl font-serif tracking-tighter text-[#2C2C2C]">
+          SIP SAGE AI
+        </h1>
       </div>
 
-      <div className="max-w-3xl mx-auto px-6 py-10">
+      <div className="max-w-3xl mx-auto px-6">
         {/* Prompt Area */}
         <div className="bg-white rounded-3xl shadow-sm border border-[#D4C9B8] p-8 mb-12">
-          <h2 className="text-2xl font-medium text-[#2C2C2C] mb-6">What kind of wine are you craving today?</h2>
+          <h2 className="text-2xl font-medium text-[#2C2C2C] mb-6 text-center">
+            What kind of wine are you craving today?
+          </h2>
           
           <form onSubmit={handleSubmit}>
             <textarea

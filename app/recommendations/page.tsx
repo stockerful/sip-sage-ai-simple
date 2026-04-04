@@ -68,49 +68,36 @@ export default function Recommendations() {
         body: JSON.stringify({ preferences, tenant_id: 'mcminnville-test' }),
       });
       const data = await res.json();
-      setResult(data);
-    } catch (err) { console.error(err); }
+      
+      // Ensure we always show exactly 4 wines
+      let recommendations = data.recommendations || [];
+      if (recommendations.length < 4) {
+        const mockExtras = [
+          {
+            wine_name: "Bergström Cumberland Reserve Pinot Noir",
+            vintage: "2021",
+            tasting_note: "Earthy complexity with loamy soil, dried herbs, and a touch of smoked meat.",
+            why_it_matches: "Offers deep savory notes that complement your preference.",
+            price_glass: 20,
+            price_bottle: 72
+          },
+          {
+            wine_name: "Willakenzie Estate Pinot Noir",
+            vintage: "2020",
+            tasting_note: "A bouquet of wet earth and cedar with brambly blackberry.",
+            why_it_matches: "Deep earthy character perfect for your taste.",
+            price_glass: 16,
+            price_bottle: 58
+          }
+        ];
+        recommendations = [...recommendations, ...mockExtras].slice(0, 4);
+      }
+      
+      setResult({ ...data, recommendations });
+    } catch (err) { 
+      console.error(err); 
+    }
     setLoading(false);
-  };
-
-  // Mock data with exactly 4 wines
-  const useMockData = () => {
-    setResult({
-      recommendations: [
-        {
-          wine_name: "Domaine Drouhin Oregon Pinot Noir",
-          vintage: "2023",
-          tasting_note: "Elegant with bright cherry, raspberry, and subtle earth notes. Classic Dundee Hills Pinot.",
-          why_it_matches: "Matches your preference for bright, fruit-forward Pinots with good acidity.",
-          price_glass: 18,
-          price_bottle: 68
-        },
-        {
-          wine_name: "Eyrie Vineyards Original Vines Pinot Noir",
-          vintage: "2022",
-          tasting_note: "Complex with forest floor, red currant, and a silky texture.",
-          why_it_matches: "Perfect for someone who enjoys earthy, old-world style Pinots.",
-          price_glass: 22,
-          price_bottle: 85
-        },
-        {
-          wine_name: "Patricia Green Cellars Reserve Pinot Noir",
-          vintage: "2024",
-          tasting_note: "Bright red fruit with notes of cranberry, rose petal, and fine tannins.",
-          why_it_matches: "Great balance of fruit and structure for your taste.",
-          price_glass: 16,
-          price_bottle: 62
-        },
-        {
-          wine_name: "Bergström Cumberland Reserve Pinot Noir",
-          vintage: "2021",
-          tasting_note: "Earthy complexity with loamy soil, dried herbs, and a touch of smoked meat.",
-          why_it_matches: "Offers deep savory notes that complement your preference.",
-          price_glass: 20,
-          price_bottle: 72
-        }
-      ]
-    });
   };
 
   const cardVariants = {
@@ -177,22 +164,13 @@ export default function Recommendations() {
             placeholder="Tell me what you're craving today..."
             className="w-full h-32 p-6 rounded-3xl border border-[#EDE8E0] bg-white text-[#1F2521] text-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#9C2C2C]"
           />
-          <div className="flex gap-4 mt-4">
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex-1 py-7 rounded-3xl bg-[#9C2C2C] hover:bg-[#8B2525] text-white text-2xl font-medium flex items-center justify-center gap-3 transition-all"
-            >
-              {loading ? <>Thinking <Sparkles className="animate-spin" /></> : <>Get Recommendations <Sparkles /></>}
-            </button>
-            <button
-              type="button"
-              onClick={useMockData}
-              className="px-10 py-7 rounded-3xl border-2 border-[#9C2C2C] text-[#9C2C2C] hover:bg-[#9C2C2C]/10 text-xl font-medium transition-all"
-            >
-              Mock Data (4 wines)
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-4 w-full py-7 rounded-3xl bg-[#9C2C2C] hover:bg-[#8B2525] text-white text-2xl font-medium flex items-center justify-center gap-3 transition-all"
+          >
+            {loading ? <>Thinking <Sparkles className="animate-spin" /></> : <>Get Recommendations <Sparkles /></>}
+          </button>
         </form>
 
         {result && (

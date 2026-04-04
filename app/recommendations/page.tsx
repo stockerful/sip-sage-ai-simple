@@ -109,7 +109,6 @@ export default function Recommendations() {
                     <div className="h-px bg-gradient-to-r from-transparent via-[#C36A4F] to-transparent mb-10"></div>
                   )}
 
-                  {/* Wine name + vintage in same style */}
                   <h3 className="text-4xl font-serif font-semibold text-[#1F2521] leading-none mb-8">
                     {wine.wine_name} <span className="text-4xl">{wine.vintage}</span>
                   </h3>
@@ -125,13 +124,13 @@ export default function Recommendations() {
                     </p>
                   </div>
 
-                  {/* New vertical pricing layout */}
+                  {/* Compact pricing - right next to labels */}
                   <div className="mt-12 space-y-8">
-                    <div className="flex justify-between items-end">
+                    <div className="flex items-baseline gap-4">
                       <div className="text-xs uppercase tracking-widest text-[#1F2521]">BOTTLE</div>
                       <div className="text-5xl font-bold text-[#1F2521]">${wine.price_bottle}</div>
                     </div>
-                    <div className="flex justify-between items-end">
+                    <div className="flex items-baseline gap-4">
                       <div className="text-xs uppercase tracking-widest text-[#C36A4F]">BY THE GLASS</div>
                       <div className="text-5xl font-bold text-[#C36A4F]">${wine.price_glass}</div>
                     </div>

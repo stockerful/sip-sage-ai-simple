@@ -27,32 +27,17 @@ export default function Welcome() {
   };
 
   return (
-    <div className="min-h-screen relative font-sans flex flex-col items-center justify-center px-6 overflow-hidden">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
-        style={{ backgroundImage: "url('/welcome-bg.jpg')" }}
-      />
-      
-      {/* Dark overlay for text readability */}
-      <div className="absolute inset-0 bg-black/40 z-10" />
-
-      {/* Content */}
-      <motion.div 
-        className="relative z-20 text-center max-w-md w-full"
-        initial="hidden"
-        animate="visible"
-        variants={container}
-      >
-        <motion.h1 variants={item} className="text-6xl font-serif tracking-[-2px] text-white mb-3 drop-shadow-lg">
+    <div className="min-h-screen bg-[#F8F9F7] font-sans flex flex-col items-center justify-center px-6 overflow-hidden">
+      <motion.div className="text-center max-w-md w-full" initial="hidden" animate="visible" variants={container}>
+        <motion.h1 variants={item} className="text-6xl font-serif tracking-[-2px] text-[#1F2521] mb-3">
           SIP SAGE AI
         </motion.h1>
         
-        <motion.p variants={item} className="text-white/90 text-xl tracking-wider mb-16">
+        <motion.p variants={item} className="text-[#8A9E8E] text-xl tracking-wider mb-16">
           Your personal wine host
         </motion.p>
 
-        <motion.p variants={item} className="text-white text-2xl leading-tight mb-16 drop-shadow-md">
+        <motion.p variants={item} className="text-[#1F2521] text-2xl leading-tight mb-16">
           Welcome to the tasting room.<br />
           Let’s find your perfect glass.
         </motion.p>
@@ -63,7 +48,7 @@ export default function Welcome() {
             variants={item}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.96 }}
-            className="w-full bg-white text-[#3F1A2E] text-2xl font-medium py-7 rounded-3xl flex items-center justify-center gap-3 shadow-xl"
+            className="w-full bg-[#1A3C35] text-white text-2xl font-medium py-7 rounded-3xl flex items-center justify-center gap-3 shadow-lg"
           >
             <Wine size={28} />
             Continue as Guest
@@ -74,7 +59,7 @@ export default function Welcome() {
             variants={item}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.96 }}
-            className="w-full border-2 border-white text-white text-2xl font-medium py-7 rounded-3xl"
+            className="w-full border-2 border-[#1A3C35] text-[#1A3C35] text-2xl font-medium py-7 rounded-3xl"
           >
             Log In
           </motion.button>
@@ -84,7 +69,7 @@ export default function Welcome() {
             variants={item}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.96 }}
-            className="w-full border-2 border-white text-white text-2xl font-medium py-7 rounded-3xl"
+            className="w-full border-2 border-[#1A3C35] text-[#1A3C35] text-2xl font-medium py-7 rounded-3xl"
           >
             Sign Up
           </motion.button>
@@ -97,7 +82,7 @@ export default function Welcome() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-white text-[#1F1F1F] text-lg px-8 py-4 rounded-3xl shadow-2xl"
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#1F2521] text-white text-lg px-8 py-4 rounded-3xl shadow-2xl"
           >
             Coming soon • Full accounts coming soon!
           </motion.div>

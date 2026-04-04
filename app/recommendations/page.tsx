@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Wine, Sparkles, RefreshCw, X, Eye } from 'lucide-react';
 
 export default function Recommendations() {
@@ -149,79 +148,72 @@ export default function Recommendations() {
         )}
       </div>
 
-      {/* Modal */}
-      <AnimatePresence>
-        {selectedWine && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4"
-            onClick={() => setSelectedWine(null)}
+      {/* SIMPLE MODAL - no Framer Motion issues */}
+      {selectedWine && (
+        <div 
+          className="fixed inset-0 bg-black/70 flex items-center justify-center z-[9999] p-4"
+          onClick={() => setSelectedWine(null)}
+        >
+          <div 
+            onClick={(e) => e.stopImmediatePropagation()}
+            className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
           >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopImmediatePropagation()}
-              className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
-            >
-              <div className="h-96 bg-[#F8F9F7] flex items-center justify-center relative">
-                <img
-                  src="https://picsum.photos/id/1015/800/800"
-                  alt={selectedWine.wine_name}
-                  className="h-full object-contain drop-shadow-2xl"
-                />
-                <button
-                  onClick={() => setSelectedWine(null)}
-                  className="absolute top-6 right-6 bg-white rounded-2xl p-3 shadow-lg hover:bg-gray-100"
-                >
-                  <X size={24} />
-                </button>
-              </div>
+            {/* Bottle Image */}
+            <div className="h-96 bg-[#F8F9F7] flex items-center justify-center relative">
+              <img
+                src="https://picsum.photos/id/1015/800/800"
+                alt={selectedWine.wine_name}
+                className="h-full object-contain drop-shadow-2xl"
+              />
+              <button
+                onClick={() => setSelectedWine(null)}
+                className="absolute top-6 right-6 bg-white rounded-2xl p-3 shadow-lg hover:bg-gray-100"
+              >
+                <X size={24} />
+              </button>
+            </div>
 
-              <div className="p-8">
-                <h2 className="text-4xl font-serif font-semibold text-[#1F2521]">
-                  {selectedWine.wine_name} <span className="text-3xl text-[#8A9E8E]">{selectedWine.vintage}</span>
-                </h2>
+            <div className="p-8">
+              <h2 className="text-4xl font-serif font-semibold text-[#1F2521]">
+                {selectedWine.wine_name} <span className="text-3xl text-[#8A9E8E]">{selectedWine.vintage}</span>
+              </h2>
 
-                <p className="text-[#1A3C35] text-xl leading-relaxed my-6">
-                  {selectedWine.tasting_note}
+              <p className="text-[#1A3C35] text-xl leading-relaxed my-6">
+                {selectedWine.tasting_note}
+              </p>
+
+              <div className="border-t border-[#EDE8E0] pt-6">
+                <div className="text-[#8A9E8E] uppercase text-sm tracking-widest mb-2">Why it matches</div>
+                <p className="text-[#1F2521] text-lg leading-relaxed">
+                  {selectedWine.why_it_matches}
                 </p>
+              </div>
 
-                <div className="border-t border-[#EDE8E0] pt-6">
-                  <div className="text-[#8A9E8E] uppercase text-sm tracking-widest mb-2">Why it matches</div>
-                  <p className="text-[#1F2521] text-lg leading-relaxed">
-                    {selectedWine.why_it_matches}
-                  </p>
+              <div className="mt-8 grid grid-cols-2 gap-8 text-sm">
+                <div>
+                  <div className="font-medium text-[#1F2521]">Cool Fact</div>
+                  <p className="text-[#8A9E8E] mt-1">Grown in the historic Dundee Hills AVA with volcanic soils that give it incredible minerality.</p>
                 </div>
-
-                <div className="mt-8 grid grid-cols-2 gap-8 text-sm">
-                  <div>
-                    <div className="font-medium text-[#1F2521]">Cool Fact</div>
-                    <p className="text-[#8A9E8E] mt-1">Grown in the historic Dundee Hills AVA with volcanic soils that give it incredible minerality.</p>
-                  </div>
-                  <div>
-                    <div className="font-medium text-[#1F2521]">Perfect Pairing</div>
-                    <p className="text-[#8A9E8E] mt-1">Salmon, mushroom risotto, aged cheeses, or roasted duck.</p>
-                  </div>
-                </div>
-
-                <div className="mt-10 flex justify-between items-center border-t border-[#EDE8E0] pt-8">
-                  <div>
-                    <div className="text-xs uppercase tracking-widest text-[#C36A4F]">BY THE GLASS</div>
-                    <div className="text-4xl font-bold text-[#C36A4F]">${selectedWine.price_glass}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xs uppercase tracking-widest text-[#1F2521]">BOTTLE</div>
-                    <div className="text-4xl font-bold text-[#1F2521]">${selectedWine.price_bottle}</div>
-                  </div>
+                <div>
+                  <div className="font-medium text-[#1F2521]">Perfect Pairing</div>
+                  <p className="text-[#8A9E8E] mt-1">Salmon, mushroom risotto, aged cheeses, or roasted duck.</p>
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
+              <div className="mt-10 flex justify-between items-center border-t border-[#EDE8E0] pt-8">
+                <div>
+                  <div className="text-xs uppercase tracking-widest text-[#C36A4F]">BY THE GLASS</div>
+                  <div className="text-4xl font-bold text-[#C36A4F]">${selectedWine.price_glass}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-xs uppercase tracking-widest text-[#1F2521]">BOTTLE</div>
+                  <div className="text-4xl font-bold text-[#1F2521]">${selectedWine.price_bottle}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

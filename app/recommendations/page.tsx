@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Wine, Sparkles, RefreshCw } from 'lucide-react';
 
 export default function Recommendations() {
@@ -30,6 +31,20 @@ export default function Recommendations() {
   const clearAll = () => {
     setPreferences('');
     setResult(null);
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+        delay: i * 0.08
+      }
+    })
   };
 
   return (
@@ -85,9 +100,15 @@ export default function Recommendations() {
 
             <div className="space-y-16">
               {result.recommendations?.map((wine: any, index: number) => (
-                <div
+                <motion.div
                   key={index}
-                  className="wine-card bg-white rounded-3xl shadow-md border border-[#E5D9C8] overflow-hidden p-8 active:scale-[1.02] transition-all"
+                  custom={index}
+                  initial="hidden"
+                  animate="visible"
+                  variants={cardVariants}
+                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                  whileTap={{ scale: 0.98, transition: { duration: 0.1 } }}
+                  className="wine-card bg-white rounded-3xl shadow-md border border-[#E5D9C8] overflow-hidden p-8"
                 >
                   {index > 0 && (
                     <div className="h-px bg-gradient-to-r from-transparent via-[#D4A017] to-transparent mb-10"></div>
@@ -119,7 +140,7 @@ export default function Recommendations() {
                       <div className="text-5xl font-bold text-[#1F1F1F]">${wine.price_bottle}</div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
 

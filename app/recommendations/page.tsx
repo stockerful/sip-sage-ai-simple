@@ -17,7 +17,7 @@ export default function Recommendations() {
       'Domaine Drouhin': { rating: 4.7, count: 23 },
       'Eyrie Vineyards': { rating: 4.9, count: 31 },
       'Patricia Green': { rating: 4.4, count: 15 },
-      'Willakenzie Estate': { rating: 4.6, count: 19 },
+      'Bergström Cumberland': { rating: 4.8, count: 19 },
     };
     return averages[key] || { rating: 4.5, count: 18 };
   };
@@ -73,7 +73,7 @@ export default function Recommendations() {
     setLoading(false);
   };
 
-  // Mock data now returns 4 wines
+  // Mock data with exactly 4 wines
   const useMockData = () => {
     setResult({
       recommendations: [
@@ -120,7 +120,7 @@ export default function Recommendations() {
 
   return (
     <div className="min-h-screen pb-12 bg-[#F9F5F0] text-[#1F2521]">
-      {/* Header with tagline */}
+      {/* Header */}
       <div className="flex items-center justify-center pt-6 pb-4 border-b border-[#EDE8E0]">
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tighter">SIP SAGE AI</h1>
@@ -188,7 +188,7 @@ export default function Recommendations() {
             <button
               type="button"
               onClick={useMockData}
-              className="px-8 py-7 rounded-3xl border-2 border-[#9C2C2C] text-[#9C2C2C] hover:bg-[#9C2C2C]/10 text-xl font-medium transition-all"
+              className="px-10 py-7 rounded-3xl border-2 border-[#9C2C2C] text-[#9C2C2C] hover:bg-[#9C2C2C]/10 text-xl font-medium transition-all"
             >
               Mock Data (4 wines)
             </button>

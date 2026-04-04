@@ -1,23 +1,21 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Wine, Sparkles, RefreshCw, Heart, History } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Wine, Sparkles, RefreshCw, Heart } from 'lucide-react';
 
 export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [favorites, setFavorites] = useState<any[]>([]);
-  const [history, setHistory] = useState<any[]>([]);
 
-  // Load favorites from localStorage
+  // Load favorites
   useEffect(() => {
-    const savedFavorites = localStorage.getItem('sipSageFavorites');
-    if (savedFavorites) setFavorites(JSON.parse(savedFavorites));
+    const saved = localStorage.getItem('sipSageFavorites');
+    if (saved) setFavorites(JSON.parse(saved));
   }, []);
 
-  // Save favorites to localStorage
   const saveFavorites = (newFavorites: any[]) => {
     setFavorites(newFavorites);
     localStorage.setItem('sipSageFavorites', JSON.stringify(newFavorites));
@@ -45,9 +43,6 @@ export default function Recommendations() {
       });
       const data = await res.json();
       setResult(data);
-
-      // Add to history
-      setHistory(prev => [data, ...prev].slice(0, 6));
     } catch (err) {
       console.error(err);
     }
@@ -112,7 +107,7 @@ export default function Recommendations() {
           </form>
         </div>
 
-        {/* Favorites Section */}
+        {/* Favorites Section - Revised Layout */}
         {favorites.length > 0 && (
           <div className="mb-16">
             <div className="flex items-center gap-2 mb-6">
@@ -121,28 +116,27 @@ export default function Recommendations() {
             </div>
             <div className="space-y-8">
               {favorites.map((wine, i) => (
-                <motion.div key={i} className="bg-white rounded-3xl shadow-md border border-[#EDE8E0] p-8">
-                  <h4 className="text-3xl font-serif text-[#1F2521]">{wine.wine_name} <span className="text-xl text-[#8A9E8E]">{wine.vintage}</span></h4>
-                  <p className="text-[#1A3C35] mt-3">{wine.tasting_note}</p>
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-white rounded-3xl shadow-sm border border-[#EDE8E0] p-8"
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="text-3xl font-serif font-semibold text-[#1F2521]">
+                        {wine.wine_name} <span className="text-2xl text-[#8A9E8E]">{wine.vintage}</span>
+                      </h4>
+                      <p className="text-[#1A3C35] mt-3 line-clamp-2">{wine.tasting_note}</p>
+                    </div>
+                    <button
+                      onClick={() => toggleFavorite(wine)}
+                      className="text-3xl text-red-500 hover:text-red-600 transition-colors"
+                    >
+                      ❤️
+                    </button>
+                  </div>
                 </motion.div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* History Section */}
-        {history.length > 0 && (
-          <div className="mb-16">
-            <div className="flex items-center gap-2 mb-6">
-              <History size={24} />
-              <h3 className="text-2xl font-medium text-[#1F2521]">Recent Recommendations</h3>
-            </div>
-            <div className="space-y-8">
-              {history.map((pastResult, i) => (
-                <div key={i} className="opacity-75">
-                  <p className="text-[#8A9E8E] text-sm mb-2">Previous search</p>
-                  <p className="text-[#1F2521]">{pastResult.explanation}</p>
-                </div>
               ))}
             </div>
           </div>
@@ -179,7 +173,7 @@ export default function Recommendations() {
                     </h3>
                     <button
                       onClick={(e) => { e.stopPropagation(); toggleFavorite(wine); }}
-                      className="text-3xl text-red-400 hover:text-red-500 transition-colors"
+                      className="text-3xl transition-colors"
                     >
                       {favorites.some(f => f.wine_name === wine.wine_name) ? '❤️' : '♡'}
                     </button>

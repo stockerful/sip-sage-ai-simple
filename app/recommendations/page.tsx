@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Wine, Sparkles, RefreshCw, X, Eye } from 'lucide-react';
 
 export default function Recommendations() {
@@ -32,6 +31,12 @@ export default function Recommendations() {
   const clearAll = () => {
     setPreferences('');
     setResult(null);
+  };
+
+  // Debug click handler
+  const openModal = (wine: any) => {
+    console.log("✅ Card clicked! Opening modal for:", wine.wine_name);
+    setSelectedWine(wine);
   };
 
   return (
@@ -87,13 +92,10 @@ export default function Recommendations() {
 
             <div className="space-y-16">
               {result.recommendations?.map((wine: any, index: number) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  onClick={() => setSelectedWine(wine)}
-                  className="wine-card cursor-pointer bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8 hover:shadow-xl transition-all"
+                  className="bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8 cursor-pointer hover:shadow-xl transition-all"
+                  onClick={() => openModal(wine)}
                 >
                   {index > 0 && (
                     <div className="h-px bg-gradient-to-r from-transparent via-[#C36A4F] to-transparent mb-10"></div>
@@ -125,12 +127,15 @@ export default function Recommendations() {
                     </div>
                   </div>
 
-                  {/* Clear visible tap area */}
-                  <div className="mt-10 flex items-center justify-center gap-2 text-[#C36A4F] text-sm font-medium border border-[#C36A4F]/30 rounded-2xl py-3 hover:bg-[#C36A4F]/5 transition-colors">
+                  {/* Very clear button */}
+                  <div 
+                    onClick={(e) => { e.stopPropagation(); openModal(wine); }}
+                    className="mt-10 flex items-center justify-center gap-2 text-[#C36A4F] text-sm font-medium border border-[#C36A4F]/30 rounded-2xl py-3 hover:bg-[#C36A4F]/5 transition-colors"
+                  >
                     <Eye size={18} />
                     Tap to view bottle details
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
 
@@ -162,7 +167,6 @@ export default function Recommendations() {
               onClick={(e) => e.stopImmediatePropagation()}
               className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
             >
-              {/* Bottle image */}
               <div className="h-96 bg-[#F8F9F7] flex items-center justify-center relative">
                 <img
                   src="https://picsum.photos/id/1015/800/800"
@@ -196,11 +200,11 @@ export default function Recommendations() {
                 <div className="mt-8 grid grid-cols-2 gap-8 text-sm">
                   <div>
                     <div className="font-medium text-[#1F2521]">Cool Fact</div>
-                    <p className="text-[#8A9E8E]">Grown in the historic Dundee Hills AVA with volcanic soils that give it incredible minerality.</p>
+                    <p className="text-[#8A9E8E] mt-1">Grown in the historic Dundee Hills AVA with volcanic soils that give it incredible minerality.</p>
                   </div>
                   <div>
                     <div className="font-medium text-[#1F2521]">Perfect Pairing</div>
-                    <p className="text-[#8A9E8E]">Salmon, mushroom risotto, aged cheeses, or roasted duck.</p>
+                    <p className="text-[#8A9E8E] mt-1">Salmon, mushroom risotto, aged cheeses, or roasted duck.</p>
                   </div>
                 </div>
 

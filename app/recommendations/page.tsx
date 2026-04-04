@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Wine, Sparkles, Heart, Share2, RefreshCw, ChevronDown, Star } from 'lucide-react';
 
@@ -72,18 +72,54 @@ export default function Recommendations() {
     setLoading(false);
   };
 
+  // 3D Tilt Card Component
+  const TiltCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [rotateX, setRotateX] = useState(0);
+    const [rotateY, setRotateY] = useState(0);
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!cardRef.current) return;
+      const rect = cardRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      const rotateXValue = (e.clientY - centerY) / 15;
+      const rotateYValue = (centerX - e.clientX) / 15;
+      
+      setRotateX(rotateXValue);
+      setRotateY(rotateYValue);
+    };
+
+    const handleMouseLeave = () => {
+      setRotateX(0);
+      setRotateY(0);
+    };
+
+    return (
+      <motion.div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+          transition: 'transform 0.1s cubic-bezier(0.23, 1, 0.32, 1)',
+        }}
+        className={`wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8 ${className}`}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        {children}
+      </motion.div>
+    );
+  };
+
   const cardVariants = {
-    hidden: { opacity: 0, y: 60, scale: 0.95 },
+    hidden: { opacity: 0, y: 60 },
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 90,
-        damping: 18,
-        delay: i * 0.07
-      }
+      transition: { type: 'spring', stiffness: 90, damping: 18, delay: i * 0.07 }
     })
   };
 
@@ -97,7 +133,7 @@ export default function Recommendations() {
         </div>
       </div>
 
-      {/* Your Favorites - fully refined */}
+      {/* Favorites at top */}
       {favorites.length > 0 && (
         <div className="max-w-2xl mx-auto px-6 mt-10">
           <div className="flex items-center gap-3 mb-6">
@@ -112,41 +148,22 @@ export default function Recommendations() {
             <div className="h-px flex-1 bg-[#EDE8E0]"></div>
           </div>
 
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence>
             {favoritesOpen && (
-              <motion.div 
-                initial={{ height: 0, opacity: 0 }} 
-                animate={{ height: 'auto', opacity: 1 }} 
-                exit={{ height: 0, opacity: 0 }}
-                className="space-y-8"
-              >
+              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="space-y-8">
                 {favorites.map((wine, i) => (
-                  <motion.div 
-                    key={i} 
-                    layout
-                    className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8"
-                  >
+                  <TiltCard key={i}>
                     <h4 className="text-2xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h4>
                     <p className="mt-4 text-sm opacity-70">{wine.why_it_matches}</p>
                     <div className="flex justify-end gap-6 mt-8">
-                      <motion.button 
-                        onClick={() => toggleFavorite(wine)} 
-                        whileHover={{ scale: 1.2 }} 
-                        whileTap={{ scale: 0.9 }} 
-                        className="transition-all"
-                      >
+                      <motion.button onClick={() => toggleFavorite(wine)} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} className="transition-all">
                         <Heart className={`w-9 h-9 ${true ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#9C2C2C]'}`} strokeWidth={2} />
                       </motion.button>
-                      <motion.button 
-                        onClick={() => shareIndividual(wine)} 
-                        whileHover={{ scale: 1.15 }} 
-                        whileTap={{ scale: 0.85 }} 
-                        className="text-[#1F2521]"
-                      >
+                      <motion.button onClick={() => shareIndividual(wine)} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.85 }} className="text-[#1F2521]">
                         <Share2 size={32} />
                       </motion.button>
                     </div>
-                  </motion.div>
+                  </TiltCard>
                 ))}
               </motion.div>
             )}
@@ -187,17 +204,7 @@ export default function Recommendations() {
                 const avg = getAverageRating(wine);
                 const isFavorited = favorites.some((f) => `${f.wine_name}-${f.vintage || ''}` === key);
                 return (
-                  <motion.div
-                    key={index}
-                    custom={index}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-50px" }}
-                    variants={cardVariants}
-                    whileHover={{ y: -8, scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8"
-                  >
+                  <TiltCard key={index}>
                     <h3 className="text-4xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h3>
                     <p className="mt-6 text-lg leading-relaxed opacity-90">{wine.tasting_note}</p>
                     <p className="mt-4 text-[#9C2C2C] font-medium">{wine.why_it_matches}</p>
@@ -255,7 +262,7 @@ export default function Recommendations() {
                         <Share2 size={32} />
                       </motion.button>
                     </div>
-                  </motion.div>
+                  </TiltCard>
                 );
               })}
             </div>

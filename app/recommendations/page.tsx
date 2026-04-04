@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wine, Sparkles, RefreshCw, X } from 'lucide-react';
+import { Wine, Sparkles, RefreshCw, X, Eye } from 'lucide-react';
 
 export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
@@ -136,6 +136,12 @@ export default function Recommendations() {
                       <div className="text-5xl font-bold text-[#C36A4F]">${wine.price_glass}</div>
                     </div>
                   </div>
+
+                  {/* Clear "Tap to view bottle" button */}
+                  <div className="mt-10 flex items-center justify-center gap-2 text-[#C36A4F] text-sm font-medium border border-[#C36A4F]/30 rounded-2xl py-3 hover:bg-[#C36A4F]/5 transition-colors">
+                    <Eye size={18} />
+                    Tap to view bottle details
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -168,7 +174,6 @@ export default function Recommendations() {
               onClick={(e) => e.stopImmediatePropagation()}
               className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
             >
-              {/* Large bottle image */}
               <div className="h-96 bg-[#F8F9F7] flex items-center justify-center relative">
                 <img
                   src="https://picsum.photos/id/1015/800/800"
@@ -199,7 +204,6 @@ export default function Recommendations() {
                   </p>
                 </div>
 
-                {/* Cool details */}
                 <div className="mt-8 grid grid-cols-2 gap-8">
                   <div>
                     <div className="font-medium text-[#1F2521]">Cool Fact</div>
@@ -211,7 +215,6 @@ export default function Recommendations() {
                   </div>
                 </div>
 
-                {/* Pricing */}
                 <div className="mt-10 flex justify-between items-center border-t border-[#EDE8E0] pt-8">
                   <div>
                     <div className="text-xs uppercase tracking-widest text-[#C36A4F]">BY THE GLASS</div>

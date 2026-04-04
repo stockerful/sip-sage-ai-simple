@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Wine, Sparkles, RefreshCw, Heart } from 'lucide-react';
+import { Wine, Sparkles, RefreshCw, Heart, Share2 } from 'lucide-react';
 
 export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [favorites, setFavorites] = useState<any[]>([]);
+  const [toast, setToast] = useState('');
 
-  // Load favorites
   useEffect(() => {
     const saved = localStorage.getItem('sipSageFavorites');
     if (saved) setFavorites(JSON.parse(saved));
@@ -54,13 +54,34 @@ export default function Recommendations() {
     setResult(null);
   };
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 15, delay: i * 0.08 }
-    })
+  const shareFavorites = async () => {
+    if (favorites.length === 0) return;
+
+    const lines = favorites.map(w => 
+      `• ${w.wine_name} ${w.vintage} — Bottle $${w.price_bottle} | Glass $${w.price_glass}`
+    );
+
+    const text = `My SIP SAGE AI Favorites from the tasting room:\n\n${lines.join('\n')}\n\nRecommended by SIP SAGE AI 🍷`;
+
+    try {
+      // Try native share first (best on iPhone)
+      if (navigator.share) {
+        await navigator.share({
+          title: 'My Wine Favorites',
+          text: text,
+        });
+        return;
+      }
+
+      // Fallback: copy to clipboard
+      await navigator.clipboard.writeText(text);
+      setToast('✅ Copied to clipboard – ready to share!');
+      setTimeout(() => setToast(''), 3000);
+    } catch (err) {
+      console.error(err);
+      setToast('Could not share. Try copying manually.');
+      setTimeout(() => setToast(''), 3000);
+    }
   };
 
   return (
@@ -107,13 +128,23 @@ export default function Recommendations() {
           </form>
         </div>
 
-        {/* Favorites Section - Revised Layout */}
+        {/* Favorites Section */}
         {favorites.length > 0 && (
           <div className="mb-16">
-            <div className="flex items-center gap-2 mb-6">
-              <Heart className="text-red-500" size={24} fill="currentColor" />
-              <h3 className="text-2xl font-medium text-[#1F2521]">Your Favorites</h3>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <Heart className="text-red-500" size={24} fill="currentColor" />
+                <h3 className="text-2xl font-medium text-[#1F2521]">Your Favorites</h3>
+              </div>
+              <button
+                onClick={shareFavorites}
+                className="flex items-center gap-2 text-[#1A3C35] font-medium text-sm border border-[#1A3C35]/30 px-5 py-2 rounded-3xl hover:bg-white transition-colors"
+              >
+                <Share2 size={18} />
+                Share Favorites
+              </button>
             </div>
+
             <div className="space-y-8">
               {favorites.map((wine, i) => (
                 <motion.div
@@ -158,7 +189,10 @@ export default function Recommendations() {
                   custom={index}
                   initial="hidden"
                   animate="visible"
-                  variants={cardVariants}
+                  variants={{
+                    hidden: { opacity: 0, y: 40 },
+                    visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.08 } })
+                  }}
                   whileHover={{ y: -8 }}
                   whileTap={{ scale: 0.98 }}
                   className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8"
@@ -214,6 +248,13 @@ export default function Recommendations() {
           </div>
         )}
       </div>
+
+      {/* Toast */}
+      {toast && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#1F2521] text-white text-lg px-8 py-4 rounded-3xl shadow-2xl">
+          {toast}
+        </div>
+      )}
     </div>
   );
 }

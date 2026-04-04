@@ -72,17 +72,17 @@ export default function Recommendations() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F6F0] font-sans pb-20 dark:bg-[#1F2521]">
-      <div className="pt-10 pb-8 text-center border-b border-[#EDE8E0] dark:border-[#D97F3E]">
-        <h1 className="text-5xl font-serif tracking-[-1px] text-[#1F2521] dark:text-[#F9F6F0]">
+    <div className="min-h-screen bg-[#F8F4EF] font-sans pb-20 dark:bg-[#1F2521]">
+      <div className="pt-10 pb-8 text-center border-b border-[#EDE8E0] dark:border-[#E07A5F]">
+        <h1 className="text-5xl font-serif tracking-[-1px] text-[#1F2521] dark:text-[#F8F4EF]">
           SIP SAGE AI
         </h1>
       </div>
 
       <div className="max-w-3xl mx-auto px-6 pt-8">
         {/* Prompt Area */}
-        <div className="bg-white dark:bg-[#1F2521] rounded-3xl shadow-sm border border-[#EDE8E0] dark:border-[#D97F3E] p-8 mb-12">
-          <h2 className="text-2xl font-medium text-[#1F2521] dark:text-[#F9F6F0] mb-6 text-center">
+        <div className="bg-white dark:bg-[#1F2521] rounded-3xl shadow-sm border border-[#EDE8E0] dark:border-[#E07A5F] p-8 mb-12">
+          <h2 className="text-2xl font-medium text-[#1F2521] dark:text-[#F8F4EF] mb-6 text-center">
             What kind of wine are you craving today?
           </h2>
           
@@ -91,14 +91,14 @@ export default function Recommendations() {
               value={preferences}
               onChange={(e) => setPreferences(e.target.value)}
               placeholder="Bright fruit-forward Pinot Noir... Earthy reds... Crisp Chardonnay..."
-              className="w-full h-40 px-6 py-6 text-xl border border-[#EDE8E0] dark:border-[#D97F3E] rounded-3xl focus:outline-none focus:border-[#4A1F2E] dark:focus:border-[#D97F3E] resize-none leading-relaxed text-[#1F2521] dark:text-[#F9F6F0]"
+              className="w-full h-40 px-6 py-6 text-xl border border-[#EDE8E0] dark:border-[#E07A5F] rounded-3xl focus:outline-none focus:border-[#3F1C2B] dark:focus:border-[#E07A5F] resize-none leading-relaxed text-[#1F2521] dark:text-[#F8F4EF]"
               disabled={loading}
             />
             
             <button
               type="submit"
               disabled={loading || !preferences.trim()}
-              className="mt-8 w-full bg-[#4A1F2E] dark:bg-[#D97F3E] hover:bg-[#3A1825] dark:hover:bg-[#C36A4F] active:scale-[0.97] disabled:bg-gray-300 text-white dark:text-[#1F2521] text-2xl font-medium py-7 rounded-3xl transition-all flex items-center justify-center gap-3 shadow-lg"
+              className="mt-8 w-full bg-[#3F1C2B] dark:bg-[#E07A5F] hover:bg-[#2C1621] dark:hover:bg-[#C36A4F] active:scale-[0.97] disabled:bg-gray-300 text-white dark:text-[#1F2521] text-2xl font-medium py-7 rounded-3xl transition-all flex items-center justify-center gap-3 shadow-lg"
             >
               {loading ? (
                 <>
@@ -118,11 +118,11 @@ export default function Recommendations() {
         {/* Favorites Section */}
         {favorites.length > 0 && (
           <div className="mb-16">
-            <button onClick={() => setFavoritesOpen(!favoritesOpen)} className="w-full flex items-center justify-between bg-white dark:bg-[#1F2521] rounded-3xl shadow-sm border border-[#EDE8E0] dark:border-[#D97F3E] px-8 py-6 text-left hover:bg-[#F9F6F0] dark:hover:bg-[#2C2520]">
+            <button onClick={() => setFavoritesOpen(!favoritesOpen)} className="w-full flex items-center justify-between bg-white dark:bg-[#1F2521] rounded-3xl shadow-sm border border-[#EDE8E0] dark:border-[#E07A5F] px-8 py-6 text-left hover:bg-[#F8F4EF] dark:hover:bg-[#2C2520]">
               <div className="flex items-center gap-3">
                 <Heart className="text-red-500" size={24} fill="currentColor" />
-                <h3 className="text-2xl font-medium text-[#1F2521] dark:text-[#F9F6F0]">Your Favorites</h3>
-                <span className="text-sm text-[#8A9E8E] dark:text-[#D97F3E] bg-[#F9F6F0] dark:bg-[#2C2520] px-3 py-1 rounded-2xl">{favorites.length}</span>
+                <h3 className="text-2xl font-medium text-[#1F2521] dark:text-[#F8F4EF]">Your Favorites</h3>
+                <span className="text-sm text-[#8A9E8E] dark:text-[#E07A5F] bg-[#F8F4EF] dark:bg-[#2C2520] px-3 py-1 rounded-2xl">{favorites.length}</span>
               </div>
               <ChevronDown size={24} className={`transition-transform ${favoritesOpen ? 'rotate-180' : ''}`} />
             </button>
@@ -131,17 +131,17 @@ export default function Recommendations() {
               {favoritesOpen && (
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="space-y-6 mt-6 overflow-hidden">
                   {favorites.map((wine, i) => (
-                    <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white dark:bg-[#1F2521] rounded-3xl shadow-sm border border-[#EDE8E0] dark:border-[#D97F3E] p-8">
+                    <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white dark:bg-[#1F2521] rounded-3xl shadow-sm border border-[#EDE8E0] dark:border-[#E07A5F] p-8">
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
-                          <h4 className="text-3xl font-serif font-semibold text-[#1F2521] dark:text-[#F9F6F0]">
-                            {wine.wine_name} <span className="text-2xl text-[#8A9E8E] dark:text-[#D97F3E]">{wine.vintage}</span>
+                          <h4 className="text-3xl font-serif font-semibold text-[#1F2521] dark:text-[#F8F4EF]">
+                            {wine.wine_name} <span className="text-2xl text-[#8A9E8E] dark:text-[#E07A5F]">{wine.vintage}</span>
                           </h4>
-                          <p className="text-[#1A3C35] dark:text-[#F9F6F0] mt-3 line-clamp-2">{wine.tasting_note}</p>
+                          <p className="text-[#1A3C35] dark:text-[#F8F4EF] mt-3 line-clamp-2">{wine.tasting_note}</p>
                         </div>
                         <div className="flex items-center gap-6">
                           <button onClick={() => toggleFavorite(wine)} className="text-3xl transition-all hover:scale-110 active:scale-95 text-red-500">❤️</button>
-                          <button onClick={() => shareIndividual(wine)} className="text-[#1F2521] dark:text-[#F9F6F0] hover:text-[#4A1F2E] dark:hover:text-[#D97F3E] transition-all hover:scale-110 active:scale-95"><Share2 size={26} /></button>
+                          <button onClick={() => shareIndividual(wine)} className="text-[#1F2521] dark:text-[#F8F4EF] hover:text-[#3F1C2B] dark:hover:text-[#E07A5F] transition-all hover:scale-110 active:scale-95"><Share2 size={26} /></button>
                         </div>
                       </div>
                     </motion.div>
@@ -156,41 +156,41 @@ export default function Recommendations() {
         {result && (
           <div className="space-y-16">
             <div className="text-center px-4">
-              <p className="text-[#8A9E8E] dark:text-[#D97F3E] text-lg leading-relaxed">
+              <p className="text-[#8A9E8E] dark:text-[#E07A5F] text-lg leading-relaxed">
                 {result.explanation || "Here are your personalized recommendations from the Willamette Valley."}
               </p>
             </div>
 
             <div className="space-y-16">
               {result.recommendations?.map((wine: any, index: number) => (
-                <motion.div key={index} custom={index} initial="hidden" animate="visible" variants={{ hidden: { opacity: 0, y: 40 }, visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.08 } }) }} whileHover={{ y: -8 }} whileTap={{ scale: 0.98 }} className="wine-card bg-white dark:bg-[#1F2521] rounded-3xl shadow-md border border-[#EDE8E0] dark:border-[#D97F3E] overflow-hidden p-8">
-                  {index > 0 && <div className="h-px bg-gradient-to-r from-transparent via-[#D97F3E] to-transparent mb-10"></div>}
+                <motion.div key={index} custom={index} initial="hidden" animate="visible" variants={{ hidden: { opacity: 0, y: 40 }, visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.08 } }) }} whileHover={{ y: -8 }} whileTap={{ scale: 0.98 }} className="wine-card bg-white dark:bg-[#1F2521] rounded-3xl shadow-md border border-[#EDE8E0] dark:border-[#E07A5F] overflow-hidden p-8">
+                  {index > 0 && <div className="h-px bg-gradient-to-r from-transparent via-[#E07A5F] to-transparent mb-10"></div>}
                   <div className="flex justify-between items-start">
-                    <h3 className="text-4xl font-serif font-semibold text-[#1F2521] dark:text-[#F9F6F0] leading-none mb-8">
+                    <h3 className="text-4xl font-serif font-semibold text-[#1F2521] dark:text-[#F8F4EF] leading-none mb-8">
                       {wine.wine_name} <span className="text-4xl">{wine.vintage}</span>
                     </h3>
                     <button onClick={(e) => { e.stopPropagation(); toggleFavorite(wine); }} className="text-3xl transition-all hover:scale-110 active:scale-95 text-red-500">{favorites.some(f => f.wine_name === wine.wine_name) ? '❤️' : '♡'}</button>
                   </div>
-                  <p className="text-[#1A3C35] dark:text-[#F9F6F0] text-xl leading-relaxed mb-8">{wine.tasting_note}</p>
-                  <div className="border-t border-[#EDE8E0] dark:border-[#D97F3E] pt-8">
-                    <div className="text-[#8A9E8E] dark:text-[#D97F3E] uppercase text-sm tracking-widest mb-2">Why it matches</div>
-                    <p className="text-[#1F2521] dark:text-[#F9F6F0] text-lg leading-relaxed">{wine.why_it_matches}</p>
+                  <p className="text-[#1A3C35] dark:text-[#F8F4EF] text-xl leading-relaxed mb-8">{wine.tasting_note}</p>
+                  <div className="border-t border-[#EDE8E0] dark:border-[#E07A5F] pt-8">
+                    <div className="text-[#8A9E8E] dark:text-[#E07A5F] uppercase text-sm tracking-widest mb-2">Why it matches</div>
+                    <p className="text-[#1F2521] dark:text-[#F8F4EF] text-lg leading-relaxed">{wine.why_it_matches}</p>
                   </div>
                   <div className="mt-12 space-y-8">
                     <div className="flex items-baseline gap-4">
-                      <div className="text-xs uppercase tracking-widest text-[#1F2521] dark:text-[#F9F6F0]">BOTTLE</div>
-                      <div className="text-5xl font-bold text-[#1F2521] dark:text-[#F9F6F0]">${wine.price_bottle}</div>
+                      <div className="text-xs uppercase tracking-widest text-[#1F2521] dark:text-[#F8F4EF]">BOTTLE</div>
+                      <div className="text-5xl font-bold text-[#1F2521] dark:text-[#F8F4EF]">${wine.price_bottle}</div>
                     </div>
                     <div className="flex items-baseline gap-4">
-                      <div className="text-xs uppercase tracking-widest text-[#D97F3E]">BY THE GLASS</div>
-                      <div className="text-5xl font-bold text-[#D97F3E]">${wine.price_glass}</div>
+                      <div className="text-xs uppercase tracking-widest text-[#E07A5F]">BY THE GLASS</div>
+                      <div className="text-5xl font-bold text-[#E07A5F]">${wine.price_glass}</div>
                     </div>
                   </div>
                 </motion.div>
               ))}
             </div>
 
-            <button onClick={clearAll} className="w-full flex items-center justify-center gap-3 py-6 text-[#1A3C35] dark:text-[#D97F3E] font-medium text-xl border-2 border-[#EDE8E0] dark:border-[#D97F3E] rounded-3xl hover:bg-white dark:hover:bg-[#1F2521] active:scale-95 transition-all mx-auto max-w-xs">
+            <button onClick={clearAll} className="w-full flex items-center justify-center gap-3 py-6 text-[#1A3C35] dark:text-[#E07A5F] font-medium text-xl border-2 border-[#EDE8E0] dark:border-[#E07A5F] rounded-3xl hover:bg-white dark:hover:bg-[#1F2521] active:scale-95 transition-all mx-auto max-w-xs">
               <RefreshCw size={24} /> New Recommendation
             </button>
           </div>

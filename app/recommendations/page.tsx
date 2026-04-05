@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Wine, Sparkles, Heart, Share2, RefreshCw, ChevronDown, Star } from 'lucide-react';
 
@@ -74,12 +74,8 @@ export default function Recommendations() {
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 60 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { type: 'spring', stiffness: 85, damping: 20, delay: i * 0.06 }
-    })
+    hidden: { opacity: 0, y: 40 },
+    visible: (i: number) => ({ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 15, delay: i * 0.08 } })
   };
 
   return (
@@ -172,19 +168,9 @@ export default function Recommendations() {
                     initial="hidden"
                     animate="visible"
                     variants={cardVariants}
-                    whileHover={{ y: -8, scale: 1.02 }}
+                    whileHover={{ y: -8 }}
                     whileTap={{ scale: 0.98 }}
-                    drag="x"
-                    dragConstraints={{ left: -120, right: 120 }}
-                    dragElastic={0.2}
-                    onDragEnd={(event, info) => {
-                      if (info.offset.x > 100) toggleFavorite(wine);
-                      if (info.offset.x < -100) {
-                        // Temporary dismiss feedback
-                        console.log('Card dismissed');
-                      }
-                    }}
-                    className="wine-card bg-white rounded-3xl shadow-xl border border-[#EDE8E0] overflow-hidden p-8 cursor-grab active:cursor-grabbing"
+                    className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8"
                   >
                     <h3 className="text-4xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h3>
                     <p className="mt-6 text-lg leading-relaxed opacity-90">{wine.tasting_note}</p>

@@ -67,36 +67,9 @@ export default function Recommendations() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ preferences, tenant_id: 'mcminnville-test' }),
       });
-      let data = await res.json();
-
-      // FORCE EXACTLY 4 WINES
-      let recommendations = data.recommendations || [];
-      if (recommendations.length < 4) {
-        const fallbackWines = [
-          {
-            wine_name: "Bergström Cumberland Reserve Pinot Noir",
-            vintage: "2021",
-            tasting_note: "Earthy complexity with loamy soil, dried herbs, and a touch of smoked meat.",
-            why_it_matches: "Offers deep savory notes that complement your preference.",
-            price_glass: 20,
-            price_bottle: 72
-          },
-          {
-            wine_name: "Willakenzie Estate Pinot Noir",
-            vintage: "2020",
-            tasting_note: "A bouquet of wet earth and cedar with brambly blackberry.",
-            why_it_matches: "Deep earthy character perfect for your taste.",
-            price_glass: 16,
-            price_bottle: 58
-          }
-        ];
-        recommendations = [...recommendations, ...fallbackWines].slice(0, 4);
-      }
-
-      setResult({ ...data, recommendations });
-    } catch (err) {
-      console.error(err);
-    }
+      const data = await res.json();
+      setResult(data);
+    } catch (err) { console.error(err); }
     setLoading(false);
   };
 
@@ -123,7 +96,10 @@ export default function Recommendations() {
         <div className="max-w-2xl mx-auto px-6 mt-10">
           <div className="flex items-center gap-3 mb-6">
             <div className="h-px flex-1 bg-[#EDE8E0]"></div>
-            <button onClick={() => setFavoritesOpen(!favoritesOpen)} className="flex items-center gap-3 text-xl font-medium text-[#1F2521] hover:text-[#9C2C2C] transition-colors">
+            <button 
+              onClick={() => setFavoritesOpen(!favoritesOpen)} 
+              className="flex items-center gap-3 text-xl font-medium text-[#1F2521] hover:text-[#9C2C2C] transition-colors"
+            >
               ❤️ Your Favorites
               <ChevronDown className={`transition-transform ${favoritesOpen ? 'rotate-180' : ''}`} />
             </button>
@@ -200,7 +176,8 @@ export default function Recommendations() {
                     <p className="mt-6 text-lg leading-relaxed opacity-90">{wine.tasting_note}</p>
                     <p className="mt-4 text-[#9C2C2C] font-medium">{wine.why_it_matches}</p>
 
-                    <div className="mt-12 space-y-8">
+                    {/* Pricing with more space */}
+                    <div className="mt-16 space-y-8">
                       <div className="flex items-baseline gap-5">
                         <div className="text-xs uppercase tracking-widest opacity-60 w-28">BY THE GLASS</div>
                         <div className="text-6xl font-bold">${wine.price_glass}</div>
@@ -211,19 +188,8 @@ export default function Recommendations() {
                       </div>
                     </div>
 
+                    {/* Your Rating now on top */}
                     <div className="mt-8 flex items-center gap-3">
-                      <span className="text-sm uppercase tracking-widest opacity-60">Guest Average</span>
-                      <div className="flex gap-1">
-                        {[1,2,3,4,5].map(s => (
-                          <Star key={s} className={`w-6 h-6 ${avg.rating >= s ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#EDE8E0]'}`} />
-                        ))}
-                      </div>
-                      <span className="text-sm font-medium text-[#9C2C2C]">
-                        {avg.rating} ({avg.count} guests)
-                      </span>
-                    </div>
-
-                    <div className="mt-6 flex items-center gap-3">
                       <span className="text-sm uppercase tracking-widest opacity-60">Your Rating</span>
                       <div className="flex gap-1">
                         {[1,2,3,4,5].map(star => (
@@ -233,6 +199,19 @@ export default function Recommendations() {
                         ))}
                       </div>
                       {userRating > 0 && <span className="ml-2 text-sm font-medium text-[#9C2C2C]">{userRating}/5</span>}
+                    </div>
+
+                    {/* Guest Average below */}
+                    <div className="mt-6 flex items-center gap-3">
+                      <span className="text-sm uppercase tracking-widest opacity-60">Guest Average</span>
+                      <div className="flex gap-1">
+                        {[1,2,3,4,5].map(s => (
+                          <Star key={s} className={`w-6 h-6 ${avg.rating >= s ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#EDE8E0]'}`} />
+                        ))}
+                      </div>
+                      <span className="text-sm font-medium text-[#9C2C2C]">
+                        {avg.rating} ({avg.count} guests)
+                      </span>
                     </div>
 
                     <div className="flex justify-end gap-6 mt-8">

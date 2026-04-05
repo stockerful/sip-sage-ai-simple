@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wine, Sparkles, Heart, Share2, RefreshCw, ChevronDown, Star, Home, Clock, User } from 'lucide-react';
+import { Wine, Sparkles, Heart, Share2, RefreshCw, ChevronDown, Star, Home, Clock, User, Plus } from 'lucide-react';
 
 export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
@@ -254,7 +254,7 @@ export default function Recommendations() {
         )}
       </div>
 
-      {/* Refined Instagram-style Bottom Tab Bar - Always visible */}
+      {/* Premium Bottom Tab Bar - Always visible */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#EDE8E0] z-50 safe-area-bottom">
         <div className="max-w-2xl mx-auto flex items-center justify-around py-2 px-4">
           <button 

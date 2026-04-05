@@ -67,20 +67,35 @@ export default function Recommendations() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ preferences, tenant_id: 'mcminnville-test' }),
       });
-      const data = await res.json();
-      
-      // Guarantee exactly 4 wines
+      let data = await res.json();
+
+      // FORCE EXACTLY 4 WINES
       let recommendations = data.recommendations || [];
       if (recommendations.length < 4) {
-        const mockExtras = [
-          { wine_name: "Bergström Cumberland Reserve Pinot Noir", vintage: "2021", tasting_note: "Earthy complexity with loamy soil, dried herbs, and a touch of smoked meat.", why_it_matches: "Offers deep savory notes that complement your preference.", price_glass: 20, price_bottle: 72 },
-          { wine_name: "Willakenzie Estate Pinot Noir", vintage: "2020", tasting_note: "A bouquet of wet earth and cedar with brambly blackberry.", why_it_matches: "Deep earthy character perfect for your taste.", price_glass: 16, price_bottle: 58 }
+        const fallbackWines = [
+          {
+            wine_name: "Bergström Cumberland Reserve Pinot Noir",
+            vintage: "2021",
+            tasting_note: "Earthy complexity with loamy soil, dried herbs, and a touch of smoked meat.",
+            why_it_matches: "Offers deep savory notes that complement your preference.",
+            price_glass: 20,
+            price_bottle: 72
+          },
+          {
+            wine_name: "Willakenzie Estate Pinot Noir",
+            vintage: "2020",
+            tasting_note: "A bouquet of wet earth and cedar with brambly blackberry.",
+            why_it_matches: "Deep earthy character perfect for your taste.",
+            price_glass: 16,
+            price_bottle: 58
+          }
         ];
-        recommendations = [...recommendations, ...mockExtras].slice(0, 4);
+        recommendations = [...recommendations, ...fallbackWines].slice(0, 4);
       }
+
       setResult({ ...data, recommendations });
-    } catch (err) { 
-      console.error(err); 
+    } catch (err) {
+      console.error(err);
     }
     setLoading(false);
   };
@@ -108,10 +123,7 @@ export default function Recommendations() {
         <div className="max-w-2xl mx-auto px-6 mt-10">
           <div className="flex items-center gap-3 mb-6">
             <div className="h-px flex-1 bg-[#EDE8E0]"></div>
-            <button 
-              onClick={() => setFavoritesOpen(!favoritesOpen)} 
-              className="flex items-center gap-3 text-xl font-medium text-[#1F2521] hover:text-[#9C2C2C] transition-colors"
-            >
+            <button onClick={() => setFavoritesOpen(!favoritesOpen)} className="flex items-center gap-3 text-xl font-medium text-[#1F2521] hover:text-[#9C2C2C] transition-colors">
               ❤️ Your Favorites
               <ChevronDown className={`transition-transform ${favoritesOpen ? 'rotate-180' : ''}`} />
             </button>

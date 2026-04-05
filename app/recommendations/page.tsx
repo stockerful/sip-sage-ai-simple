@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Wine, Sparkles, Heart, Share2, RefreshCw, ChevronDown, Star } from 'lucide-react';
 
@@ -10,6 +10,7 @@ export default function Recommendations() {
   const [favorites, setFavorites] = useState<any[]>([]);
   const [favoritesOpen, setFavoritesOpen] = useState(true);
   const [ratings, setRatings] = useState<{[key: string]: number}>({});
+  const [selectedWine, setSelectedWine] = useState<any>(null);
 
   const getAverageRating = (wine: any) => {
     const key = `${wine.wine_name}-${wine.vintage || ''}`;
@@ -74,8 +75,12 @@ export default function Recommendations() {
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: (i: number) => ({ opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 15, delay: i * 0.08 } })
+    hidden: { opacity: 0, y: 60 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { type: 'spring', stiffness: 85, damping: 20, delay: i * 0.06 }
+    })
   };
 
   return (
@@ -91,7 +96,7 @@ export default function Recommendations() {
         </div>
       </div>
 
-      {/* Favorites at top */}
+      {/* Favorites at top - floating style */}
       {favorites.length > 0 && (
         <div className="max-w-2xl mx-auto px-6 mt-10">
           <div className="flex items-center gap-3 mb-6">
@@ -110,7 +115,7 @@ export default function Recommendations() {
             {favoritesOpen && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="space-y-8">
                 {favorites.map((wine, i) => (
-                  <motion.div key={i} className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8">
+                  <motion.div key={i} className="wine-card bg-white rounded-3xl shadow-xl border border-[#EDE8E0] overflow-hidden p-8">
                     <h4 className="text-2xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h4>
                     <p className="mt-4 text-sm opacity-70">{wine.why_it_matches}</p>
                     <div className="flex justify-end gap-6 mt-8">
@@ -168,16 +173,24 @@ export default function Recommendations() {
                     initial="hidden"
                     animate="visible"
                     variants={cardVariants}
-                    whileHover={{ y: -8 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8"
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    drag="x"
+                    dragConstraints={{ left: -100, right: 100 }}
+                    onDragEnd={(event, info) => {
+                      if (info.offset.x > 80) toggleFavorite(wine);
+                      if (info.offset.x < -80) {
+                        // dismiss temporarily
+                        console.log('Card dismissed');
+                      }
+                    }}
+                    className="wine-card bg-white rounded-3xl shadow-xl border border-[#EDE8E0] overflow-hidden p-8 cursor-grab active:cursor-grabbing"
                   >
                     <h3 className="text-4xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h3>
                     <p className="mt-6 text-lg leading-relaxed opacity-90">{wine.tasting_note}</p>
                     <p className="mt-4 text-[#9C2C2C] font-medium">{wine.why_it_matches}</p>
 
-                    {/* Pricing with more space */}
-                    <div className="mt-16 space-y-8">
+                    <div className="mt-12 space-y-8">
                       <div className="flex items-baseline gap-5">
                         <div className="text-xs uppercase tracking-widest opacity-60 w-28">BY THE GLASS</div>
                         <div className="text-6xl font-bold">${wine.price_glass}</div>
@@ -188,7 +201,6 @@ export default function Recommendations() {
                       </div>
                     </div>
 
-                    {/* Your Rating now on top */}
                     <div className="mt-8 flex items-center gap-3">
                       <span className="text-sm uppercase tracking-widest opacity-60">Your Rating</span>
                       <div className="flex gap-1">
@@ -201,7 +213,6 @@ export default function Recommendations() {
                       {userRating > 0 && <span className="ml-2 text-sm font-medium text-[#9C2C2C]">{userRating}/5</span>}
                     </div>
 
-                    {/* Guest Average below */}
                     <div className="mt-6 flex items-center gap-3">
                       <span className="text-sm uppercase tracking-widest opacity-60">Guest Average</span>
                       <div className="flex gap-1">

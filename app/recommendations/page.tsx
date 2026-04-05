@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wine, Sparkles, Heart, Share2, RefreshCw, ChevronDown, Star, Home } from 'lucide-react';
+import { Wine, Sparkles, Heart, Share2, RefreshCw, ChevronDown, Star, Home, Clock, User } from 'lucide-react';
 
 export default function Recommendations() {
   const [preferences, setPreferences] = useState('');
@@ -9,7 +9,7 @@ export default function Recommendations() {
   const [result, setResult] = useState<any>(null);
   const [favorites, setFavorites] = useState<any[]>([]);
   const [ratings, setRatings] = useState<{[key: string]: number}>({});
-  const [activeTab, setActiveTab] = useState<'discover' | 'favorites'>('discover');
+  const [activeTab, setActiveTab] = useState<'discover' | 'favorites' | 'history' | 'profile'>('discover');
 
   const getAverageRating = (wine: any) => {
     const key = `${wine.wine_name}-${wine.vintage || ''}`;
@@ -93,10 +93,10 @@ export default function Recommendations() {
       </div>
 
       {/* Tab Content */}
-      <div className="max-w-2xl mx-auto px-6">
+      <div className="max-w-2xl mx-auto px-6 pt-6">
         {activeTab === 'discover' && (
           <>
-            <form onSubmit={handleSubmit} className="mt-8">
+            <form onSubmit={handleSubmit} className="mt-2">
               <textarea
                 value={preferences}
                 onChange={(e) => setPreferences(e.target.value)}
@@ -221,25 +221,72 @@ export default function Recommendations() {
             </AnimatePresence>
           </div>
         )}
+
+        {activeTab === 'history' && (
+          <div className="mt-8">
+            <h2 className="text-3xl font-light mb-6">History</h2>
+            <p className="text-[#9C2C2C]/60">Your past recommendations and rated wines will appear here.</p>
+            {/* Mock history for now */}
+            <div className="mt-8 space-y-6 opacity-70">
+              <div className="flex justify-between items-center bg-white p-6 rounded-3xl">
+                <div>
+                  <p className="font-medium">Domaine Drouhin Pinot Noir 2023</p>
+                  <p className="text-sm">Rated 5 stars • 2 days ago</p>
+                </div>
+                <Star className="w-6 h-6 text-[#9C2C2C] fill-[#9C2C2C]" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'profile' && (
+          <div className="mt-8 text-center">
+            <h2 className="text-3xl font-light mb-6">Profile</h2>
+            <div className="bg-white rounded-3xl p-8">
+              <div className="flex justify-center mb-6">
+                <div className="w-24 h-24 bg-[#EDE8E0] rounded-2xl flex items-center justify-center">
+                  👤
+                </div>
+              </div>
+              <h3 className="text-2xl font-medium">McMinnville Taster</h3>
+              <p className="text-[#9C2C2C]">Wine Enthusiast • Oregon</p>
+              <div className="grid grid-cols-3 gap-4 mt-10">
+                <div>
+                  <div className="text-4xl font-bold text-[#9C2C2C]">24</div>
+                  <div className="text-xs uppercase tracking-widest">Wines Rated</div>
+                </div>
+                <div>
+                  <div className="text-4xl font-bold text-[#9C2C2C]">12</div>
+                  <div className="text-xs uppercase tracking-widest">Favorites</div>
+                </div>
+                <div>
+                  <div className="text-4xl font-bold text-[#9C2C2C]">8</div>
+                  <div className="text-xs uppercase tracking-widest">Sessions</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Instagram-style Bottom Tab Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#EDE8E0] z-50 safe-area-bottom">
-        <div className="max-w-2xl mx-auto flex items-center justify-around py-2">
-          <button
-            onClick={() => setActiveTab('discover')}
-            className={`flex flex-col items-center gap-1 py-2 px-8 transition-colors ${activeTab === 'discover' ? 'text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}
-          >
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#EDE8E0] z-50">
+        <div className="max-w-2xl mx-auto flex items-center justify-around py-3">
+          <button onClick={() => setActiveTab('discover')} className={`flex flex-col items-center gap-1 flex-1 ${activeTab === 'discover' ? 'text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}>
             <Home size={28} />
             <span className="text-xs font-medium">Discover</span>
           </button>
-
-          <button
-            onClick={() => setActiveTab('favorites')}
-            className={`flex flex-col items-center gap-1 py-2 px-8 transition-colors ${activeTab === 'favorites' ? 'text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}
-          >
+          <button onClick={() => setActiveTab('favorites')} className={`flex flex-col items-center gap-1 flex-1 ${activeTab === 'favorites' ? 'text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}>
             <Heart size={28} className={activeTab === 'favorites' ? 'fill-[#9C2C2C]' : ''} />
             <span className="text-xs font-medium">Favorites</span>
+          </button>
+          <button onClick={() => setActiveTab('history')} className={`flex flex-col items-center gap-1 flex-1 ${activeTab === 'history' ? 'text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}>
+            <Clock size={28} />
+            <span className="text-xs font-medium">History</span>
+          </button>
+          <button onClick={() => setActiveTab('profile')} className={`flex flex-col items-center gap-1 flex-1 ${activeTab === 'profile' ? 'text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}>
+            <User size={28} />
+            <span className="text-xs font-medium">Profile</span>
           </button>
         </div>
       </div>

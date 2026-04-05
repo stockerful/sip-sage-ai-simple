@@ -10,7 +10,6 @@ export default function Recommendations() {
   const [favorites, setFavorites] = useState<any[]>([]);
   const [favoritesOpen, setFavoritesOpen] = useState(true);
   const [ratings, setRatings] = useState<{[key: string]: number}>({});
-  const [selectedWine, setSelectedWine] = useState<any>(null);
 
   const getAverageRating = (wine: any) => {
     const key = `${wine.wine_name}-${wine.vintage || ''}`;
@@ -96,7 +95,7 @@ export default function Recommendations() {
         </div>
       </div>
 
-      {/* Favorites at top - floating style */}
+      {/* Favorites at top */}
       {favorites.length > 0 && (
         <div className="max-w-2xl mx-auto px-6 mt-10">
           <div className="flex items-center gap-3 mb-6">
@@ -115,7 +114,7 @@ export default function Recommendations() {
             {favoritesOpen && (
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="space-y-8">
                 {favorites.map((wine, i) => (
-                  <motion.div key={i} className="wine-card bg-white rounded-3xl shadow-xl border border-[#EDE8E0] overflow-hidden p-8">
+                  <motion.div key={i} className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8">
                     <h4 className="text-2xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h4>
                     <p className="mt-4 text-sm opacity-70">{wine.why_it_matches}</p>
                     <div className="flex justify-end gap-6 mt-8">
@@ -174,13 +173,14 @@ export default function Recommendations() {
                     animate="visible"
                     variants={cardVariants}
                     whileHover={{ y: -8, scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileTap={{ scale: 0.98 }}
                     drag="x"
-                    dragConstraints={{ left: -100, right: 100 }}
+                    dragConstraints={{ left: -120, right: 120 }}
+                    dragElastic={0.2}
                     onDragEnd={(event, info) => {
-                      if (info.offset.x > 80) toggleFavorite(wine);
-                      if (info.offset.x < -80) {
-                        // dismiss temporarily
+                      if (info.offset.x > 100) toggleFavorite(wine);
+                      if (info.offset.x < -100) {
+                        // Temporary dismiss feedback
                         console.log('Card dismissed');
                       }
                     }}

@@ -69,7 +69,6 @@ export default function Recommendations() {
       });
       const data = await res.json();
       setResult(data);
-      setActiveTab('discover');
     } catch (err) { console.error(err); }
     setLoading(false);
   };
@@ -81,7 +80,7 @@ export default function Recommendations() {
 
   return (
     <div className="min-h-screen bg-[#F9F5F0] text-[#1F2521] pb-20">
-      {/* Header */}
+      {/* Header - always visible */}
       <div className="flex items-center justify-center pt-6 pb-4 border-b border-[#EDE8E0]">
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tighter">SIP SAGE AI</h1>
@@ -92,7 +91,7 @@ export default function Recommendations() {
         </div>
       </div>
 
-      {/* Tab Content */}
+      {/* Main Content Area */}
       <div className="max-w-2xl mx-auto px-6 pt-6">
         {activeTab === 'discover' && (
           <>
@@ -197,28 +196,26 @@ export default function Recommendations() {
         {activeTab === 'favorites' && (
           <div className="mt-8">
             <h2 className="text-3xl font-light mb-6">Your Favorites</h2>
-            <AnimatePresence>
-              {favorites.length > 0 ? (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
-                  {favorites.map((wine, i) => (
-                    <motion.div key={i} className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8">
-                      <h4 className="text-2xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h4>
-                      <p className="mt-4 text-sm opacity-70">{wine.why_it_matches}</p>
-                      <div className="flex justify-end gap-6 mt-8">
-                        <motion.button onClick={() => toggleFavorite(wine)} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} className="transition-all">
-                          <Heart className={`w-9 h-9 text-[#9C2C2C] fill-[#9C2C2C]`} strokeWidth={0} />
-                        </motion.button>
-                        <motion.button onClick={() => shareIndividual(wine)} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.85 }} className="text-[#1F2521]">
-                          <Share2 size={32} />
-                        </motion.button>
-                      </div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              ) : (
-                <p className="text-center text-[#9C2C2C]/60 py-12">No favorites yet. Start favoriting wines!</p>
-              )}
-            </AnimatePresence>
+            {favorites.length > 0 ? (
+              <div className="space-y-8">
+                {favorites.map((wine, i) => (
+                  <motion.div key={i} className="wine-card bg-white rounded-3xl shadow-md border border-[#EDE8E0] overflow-hidden p-8">
+                    <h4 className="text-2xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h4>
+                    <p className="mt-4 text-sm opacity-70">{wine.why_it_matches}</p>
+                    <div className="flex justify-end gap-6 mt-8">
+                      <motion.button onClick={() => toggleFavorite(wine)} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} className="transition-all">
+                        <Heart className={`w-9 h-9 text-[#9C2C2C] fill-[#9C2C2C]`} strokeWidth={0} />
+                      </motion.button>
+                      <motion.button onClick={() => shareIndividual(wine)} whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.85 }} className="text-[#1F2521]">
+                        <Share2 size={32} />
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-[#9C2C2C]/60 py-12">No favorites yet. Start favoriting wines!</p>
+            )}
           </div>
         )}
 
@@ -226,16 +223,6 @@ export default function Recommendations() {
           <div className="mt-8">
             <h2 className="text-3xl font-light mb-6">History</h2>
             <p className="text-[#9C2C2C]/60">Your past recommendations and rated wines will appear here.</p>
-            {/* Mock history for now */}
-            <div className="mt-8 space-y-6 opacity-70">
-              <div className="flex justify-between items-center bg-white p-6 rounded-3xl">
-                <div>
-                  <p className="font-medium">Domaine Drouhin Pinot Noir 2023</p>
-                  <p className="text-sm">Rated 5 stars • 2 days ago</p>
-                </div>
-                <Star className="w-6 h-6 text-[#9C2C2C] fill-[#9C2C2C]" />
-              </div>
-            </div>
           </div>
         )}
 
@@ -244,9 +231,7 @@ export default function Recommendations() {
             <h2 className="text-3xl font-light mb-6">Profile</h2>
             <div className="bg-white rounded-3xl p-8">
               <div className="flex justify-center mb-6">
-                <div className="w-24 h-24 bg-[#EDE8E0] rounded-2xl flex items-center justify-center">
-                  👤
-                </div>
+                <div className="w-24 h-24 bg-[#EDE8E0] rounded-2xl flex items-center justify-center text-5xl">👤</div>
               </div>
               <h3 className="text-2xl font-medium">McMinnville Taster</h3>
               <p className="text-[#9C2C2C]">Wine Enthusiast • Oregon</p>
@@ -269,7 +254,7 @@ export default function Recommendations() {
         )}
       </div>
 
-      {/* Instagram-style Bottom Tab Bar */}
+      {/* Bottom Tab Bar - ALWAYS visible on every tab */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#EDE8E0] z-50">
         <div className="max-w-2xl mx-auto flex items-center justify-around py-3">
           <button onClick={() => setActiveTab('discover')} className={`flex flex-col items-center gap-1 flex-1 ${activeTab === 'discover' ? 'text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}>

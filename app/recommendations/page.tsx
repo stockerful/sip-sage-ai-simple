@@ -80,7 +80,7 @@ export default function Recommendations() {
 
   return (
     <div className="min-h-screen bg-[#F9F5F0] text-[#1F2521] pb-20">
-      {/* Header - always visible */}
+      {/* Header */}
       <div className="flex items-center justify-center pt-6 pb-4 border-b border-[#EDE8E0]">
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tighter">SIP SAGE AI</h1>
@@ -91,7 +91,7 @@ export default function Recommendations() {
         </div>
       </div>
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <div className="max-w-2xl mx-auto px-6 pt-6">
         {activeTab === 'discover' && (
           <>
@@ -254,22 +254,37 @@ export default function Recommendations() {
         )}
       </div>
 
-      {/* Bottom Tab Bar - ALWAYS visible on every tab */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#EDE8E0] z-50">
-        <div className="max-w-2xl mx-auto flex items-center justify-around py-3">
-          <button onClick={() => setActiveTab('discover')} className={`flex flex-col items-center gap-1 flex-1 ${activeTab === 'discover' ? 'text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}>
+      {/* Refined Instagram-style Bottom Tab Bar - Always visible */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#EDE8E0] z-50 safe-area-bottom">
+        <div className="max-w-2xl mx-auto flex items-center justify-around py-2 px-4">
+          <button 
+            onClick={() => setActiveTab('discover')} 
+            className={`flex flex-col items-center gap-1 flex-1 py-2 rounded-2xl transition-all ${activeTab === 'discover' ? 'bg-[#9C2C2C]/10 text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}
+          >
             <Home size={28} />
             <span className="text-xs font-medium">Discover</span>
           </button>
-          <button onClick={() => setActiveTab('favorites')} className={`flex flex-col items-center gap-1 flex-1 ${activeTab === 'favorites' ? 'text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}>
+
+          <button 
+            onClick={() => setActiveTab('favorites')} 
+            className={`flex flex-col items-center gap-1 flex-1 py-2 rounded-2xl transition-all ${activeTab === 'favorites' ? 'bg-[#9C2C2C]/10 text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}
+          >
             <Heart size={28} className={activeTab === 'favorites' ? 'fill-[#9C2C2C]' : ''} />
             <span className="text-xs font-medium">Favorites</span>
           </button>
-          <button onClick={() => setActiveTab('history')} className={`flex flex-col items-center gap-1 flex-1 ${activeTab === 'history' ? 'text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}>
+
+          <button 
+            onClick={() => setActiveTab('history')} 
+            className={`flex flex-col items-center gap-1 flex-1 py-2 rounded-2xl transition-all ${activeTab === 'history' ? 'bg-[#9C2C2C]/10 text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}
+          >
             <Clock size={28} />
             <span className="text-xs font-medium">History</span>
           </button>
-          <button onClick={() => setActiveTab('profile')} className={`flex flex-col items-center gap-1 flex-1 ${activeTab === 'profile' ? 'text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}>
+
+          <button 
+            onClick={() => setActiveTab('profile')} 
+            className={`flex flex-col items-center gap-1 flex-1 py-2 rounded-2xl transition-all ${activeTab === 'profile' ? 'bg-[#9C2C2C]/10 text-[#9C2C2C]' : 'text-[#1F2521]/60'}`}
+          >
             <User size={28} />
             <span className="text-xs font-medium">Profile</span>
           </button>

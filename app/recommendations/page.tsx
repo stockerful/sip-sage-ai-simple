@@ -39,8 +39,9 @@ export default function Recommendations() {
 
   const shareIndividual = async (wine: any) => {
     const text = `${wine.wine_name} ${wine.vintage} — ${wine.why_it_matches}`;
-    if (navigator.share) await navigator.share({ title: wine.wine_name, text });
-    else {
+    if (navigator.share) {
+      await navigator.share({ title: wine.wine_name, text });
+    } else {
       await navigator.clipboard.writeText(text);
       alert('✅ Copied to clipboard!');
     }
@@ -57,8 +58,9 @@ export default function Recommendations() {
         body: JSON.stringify({ preferences, tenant_id: 'mcminnville-test' }),
       });
       const data = await res.json();
-      console.log('🔥 Backend response:', data); // ← Debug: check if Grok-3 is being used
+      
       let recommendations = data.recommendations || [];
+      
       // Guarantee exactly 4 cards
       if (recommendations.length < 4) {
         const mockExtras = [
@@ -68,6 +70,7 @@ export default function Recommendations() {
         ];
         recommendations = [...recommendations, ...mockExtras].slice(0, 4);
       }
+      
       setResult({ ...data, recommendations });
     } catch (err) {
       console.error(err);
@@ -76,12 +79,8 @@ export default function Recommendations() {
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { type: 'spring', stiffness: 100, damping: 15, delay: i * 0.08 }
-    })
+    hidden: { opacity: 0, y: 30 },
+    visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.08, type: 'spring', stiffness: 100, damping: 15 } })
   };
 
   return (
@@ -127,22 +126,22 @@ export default function Recommendations() {
                         initial="hidden"
                         animate="visible"
                         variants={cardVariants}
-                        whileHover={{ y: -8, scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
                         className="bg-white rounded-3xl shadow-md border border-[#EDE8E0] p-8"
                       >
                         <h3 className="text-4xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h3>
+                        
                         <p className="mt-6 text-lg leading-relaxed">{wine.tasting_note}</p>
+                        
                         <p className="mt-4 text-[#9C2C2C] font-medium">{wine.why_it_matches}</p>
 
                         <div className="mt-10 flex items-baseline gap-8">
                           <div>
                             <div className="text-xs uppercase tracking-widest text-gray-500">BY THE GLASS</div>
-                            <div className="text-5xl font-bold">${wine.price_glass}</div>
+                            <div className="text-5xl font-bold text-[#1F2521]">${wine.price_glass}</div>
                           </div>
                           <div>
                             <div className="text-xs uppercase tracking-widest text-gray-500">BOTTLE</div>
-                            <div className="text-5xl font-bold">${wine.price_bottle}</div>
+                            <div className="text-5xl font-bold text-[#1F2521]">${wine.price_bottle}</div>
                           </div>
                         </div>
 
@@ -158,10 +157,16 @@ export default function Recommendations() {
                             </div>
                           </div>
                           <div className="flex gap-6">
-                            <motion.button onClick={() => toggleFavorite(wine)} whileTap={{ scale: 0.9 }}>
+                            <motion.button
+                              onClick={() => toggleFavorite(wine)}
+                              whileTap={{ scale: 0.9 }}
+                            >
                               <Heart className={`w-9 h-9 ${isFavorited ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#9C2C2C]'}`} strokeWidth={isFavorited ? 0 : 2} />
                             </motion.button>
-                            <motion.button onClick={() => shareIndividual(wine)} whileTap={{ scale: 0.9 }}>
+                            <motion.button
+                              onClick={() => shareIndividual(wine)}
+                              whileTap={{ scale: 0.9 }}
+                            >
                               <Share2 size={36} className="text-[#1F2521]" />
                             </motion.button>
                           </div>
@@ -175,13 +180,13 @@ export default function Recommendations() {
           </>
         )}
 
-        {/* Other tabs */}
+        {/* Other tabs (Favorites, History, Profile) */}
         {activeTab === 'favorites' && <div className="mt-8 text-center text-gray-500">Your favorites will appear here.</div>}
         {activeTab === 'history' && <div className="mt-8 text-center text-gray-500">Your history will appear here.</div>}
         {activeTab === 'profile' && <div className="mt-8 text-center text-gray-500">Profile coming soon.</div>}
       </div>
 
-      {/* Bottom Tab Bar */}
+      {/* Bottom Tab Bar - Always visible */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#EDE8E0] z-50">
         <div className="max-w-2xl mx-auto flex justify-around py-3">
           <button onClick={() => setActiveTab('discover')} className={`flex-1 flex flex-col items-center ${activeTab === 'discover' ? 'text-[#9C2C2C]' : 'text-gray-400'}`}>

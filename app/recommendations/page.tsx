@@ -91,7 +91,7 @@ export default function Recommendations() {
         <p className="text-sm uppercase tracking-[1.5px] text-[#9C2C2C]">Instant Expertise. Effortless Hosting</p>
       </div>
 
-      {/* Main Content Area */}
+      {/* Content Area */}
       <div className="max-w-2xl mx-auto px-6 pt-8 pb-8">
         {activeTab === 'discover' && (
           <>
@@ -173,44 +173,7 @@ export default function Recommendations() {
           </>
         )}
 
-        {activeTab === 'favorites' && (
-          <div className="mt-8">
-            <h2 className="text-3xl font-light mb-6">Your Favorites</h2>
-            {favorites.length > 0 ? (
-              <div className="grid gap-12">
-                {favorites.map((wine, index) => (
-                  <motion.div
-                    key={index}
-                    custom={index}
-                    initial="hidden"
-                    animate="visible"
-                    variants={cardVariants}
-                    whileHover={{ y: -4, scale: 1.015 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="bg-white rounded-3xl shadow-xl border border-[#EDE8E0] p-8"
-                  >
-                    <h3 className="text-4xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h3>
-                    <p className="mt-6 text-lg leading-relaxed">{wine.tasting_note}</p>
-                    <p className="mt-4 text-[#9C2C2C] font-medium">{wine.why_it_matches}</p>
-                    <div className="mt-10 space-y-6">
-                      <div className="flex items-baseline gap-5">
-                        <div className="text-xs uppercase tracking-widest text-gray-500 w-28">BOTTLE</div>
-                        <div className="text-5xl font-bold">${wine.price_bottle}</div>
-                      </div>
-                      <div className="flex items-baseline gap-5">
-                        <div className="text-xs uppercase tracking-widest text-gray-500 w-28">BY THE GLASS</div>
-                        <div className="text-5xl font-bold">${wine.price_glass}</div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-center text-gray-500 py-12">No favorites yet. Start favoriting wines from Discover!</p>
-            )}
-          </div>
-        )}
-
+        {activeTab === 'favorites' && <div className="mt-8 text-center text-gray-500">Your favorites will appear here.</div>}
         {activeTab === 'history' && <div className="mt-8 text-center text-gray-500">Your history will appear here.</div>}
         {activeTab === 'profile' && <div className="mt-8 text-center text-gray-500">Profile coming soon.</div>}
       </div>

@@ -91,8 +91,8 @@ export default function Recommendations() {
         <p className="text-sm uppercase tracking-[1.5px] text-[#9C2C2C]">Instant Expertise. Effortless Hosting</p>
       </div>
 
-      {/* Content Area */}
-      <div className="max-w-2xl mx-auto px-6 pt-8">
+      {/* Main Content Area */}
+      <div className="max-w-2xl mx-auto px-6 pt-8 pb-8">
         {activeTab === 'discover' && (
           <>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -156,16 +156,10 @@ export default function Recommendations() {
                             </div>
                           </div>
                           <div className="flex gap-6">
-                            <motion.button
-                              onClick={() => toggleFavorite(wine)}
-                              whileTap={{ scale: 0.92 }}
-                            >
+                            <motion.button onClick={() => toggleFavorite(wine)} whileTap={{ scale: 0.92 }}>
                               <Heart className={`w-9 h-9 ${isFavorited ? 'text-[#9C2C2C] fill-[#9C2C2C]' : 'text-[#9C2C2C]'}`} strokeWidth={isFavorited ? 0 : 2} />
                             </motion.button>
-                            <motion.button
-                              onClick={() => shareIndividual(wine)}
-                              whileTap={{ scale: 0.92 }}
-                            >
+                            <motion.button onClick={() => shareIndividual(wine)} whileTap={{ scale: 0.92 }}>
                               <Share2 size={36} className="text-[#1F2521]" />
                             </motion.button>
                           </div>
@@ -195,7 +189,6 @@ export default function Recommendations() {
                     whileTap={{ scale: 0.98 }}
                     className="bg-white rounded-3xl shadow-xl border border-[#EDE8E0] p-8"
                   >
-                    {/* Same full card content as Discover tab */}
                     <h3 className="text-4xl font-serif font-bold">{wine.wine_name} {wine.vintage}</h3>
                     <p className="mt-6 text-lg leading-relaxed">{wine.tasting_note}</p>
                     <p className="mt-4 text-[#9C2C2C] font-medium">{wine.why_it_matches}</p>
@@ -222,22 +215,34 @@ export default function Recommendations() {
         {activeTab === 'profile' && <div className="mt-8 text-center text-gray-500">Profile coming soon.</div>}
       </div>
 
-      {/* ALWAYS VISIBLE Bottom Tab Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#EDE8E0] z-50">
+      {/* ALWAYS VISIBLE BOTTOM TAB BAR - NO EXCEPTIONS */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#EDE8E0] z-[100] shadow-xl">
         <div className="max-w-2xl mx-auto flex justify-around py-3">
-          <button onClick={() => setActiveTab('discover')} className={`flex-1 flex flex-col items-center ${activeTab === 'discover' ? 'text-[#9C2C2C]' : 'text-gray-400'}`}>
+          <button 
+            onClick={() => setActiveTab('discover')} 
+            className={`flex-1 flex flex-col items-center ${activeTab === 'discover' ? 'text-[#9C2C2C]' : 'text-gray-400'}`}
+          >
             <Home size={28} />
             <span className="text-xs mt-1">Discover</span>
           </button>
-          <button onClick={() => setActiveTab('favorites')} className={`flex-1 flex flex-col items-center ${activeTab === 'favorites' ? 'text-[#9C2C2C]' : 'text-gray-400'}`}>
+          <button 
+            onClick={() => setActiveTab('favorites')} 
+            className={`flex-1 flex flex-col items-center ${activeTab === 'favorites' ? 'text-[#9C2C2C]' : 'text-gray-400'}`}
+          >
             <Heart size={28} />
             <span className="text-xs mt-1">Favorites</span>
           </button>
-          <button onClick={() => setActiveTab('history')} className={`flex-1 flex flex-col items-center ${activeTab === 'history' ? 'text-[#9C2C2C]' : 'text-gray-400'}`}>
+          <button 
+            onClick={() => setActiveTab('history')} 
+            className={`flex-1 flex flex-col items-center ${activeTab === 'history' ? 'text-[#9C2C2C]' : 'text-gray-400'}`}
+          >
             <Clock size={28} />
             <span className="text-xs mt-1">History</span>
           </button>
-          <button onClick={() => setActiveTab('profile')} className={`flex-1 flex flex-col items-center ${activeTab === 'profile' ? 'text-[#9C2C2C]' : 'text-gray-400'}`}>
+          <button 
+            onClick={() => setActiveTab('profile')} 
+            className={`flex-1 flex flex-col items-center ${activeTab === 'profile' ? 'text-[#9C2C2C]' : 'text-gray-400'}`}
+          >
             <User size={28} />
             <span className="text-xs mt-1">Profile</span>
           </button>
